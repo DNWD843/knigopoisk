@@ -1,7 +1,7 @@
 {
-  "name": "book-app",
+  "name": "library",
   "version": "1.0.0",
-  "description": "Cool book app",
+  "description": "Library application using Javascript and it`s own mini-framework",
   "main": "app.js",
   "scripts": {
     "start": "live-server",
@@ -9,19 +9,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlariCode/8-javascript-advanced-1.git"
+    "url": "git+https://github.com/DNWD843/library.git"
   },
   "keywords": [
     "books"
   ],
-  "author": "Anton Larichev",
+  "author": "Dmitry Neklyudov",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AlariCode/8-javascript-advanced-1/issues"
+    "url": "https://github.com/DNWD843/library/issues"
   },
-  "homepage": "https://purpleschool.ru",
+  "homepage": "https://github.com/DNWD843/library#readme.md",
   "devDependencies": {
     "eslint": "^8.33.0",
-    "rollup": "^3.14.0"
+    "rollup": "^3.14.0",
+    "live-server": "^1.2.2"
   }
 }
