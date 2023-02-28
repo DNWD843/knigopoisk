@@ -1,0 +1,27 @@
+{
+  "name": "book-app",
+  "version": "1.0.0",
+  "description": "Cool book app",
+  "main": "app.js",
+  "scripts": {
+    "start": "live-server",
+    "build": "rollup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlariCode/8-javascript-advanced-1.git"
+  },
+  "keywords": [
+    "books"
+  ],
+  "author": "Anton Larichev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlariCode/8-javascript-advanced-1/issues"
+  },
+  "homepage": "https://purpleschool.ru",
+  "devDependencies": {
+    "eslint": "^8.33.0",
+    "rollup": "^3.14.0"
+  }
+}
