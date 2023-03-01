@@ -17,14 +17,15 @@ export class MainView extends AbstractView {
   constructor(appState) {
     super();
     this.#appState = appState;
-    this.#appState = onChange(this.#appState, this.handleAppStateChange)
+    this.#appState = onChange(this.#appState, this.#handleAppStateChange)
     this.setTitle(MAIN_VIEW_TITLE)
   }
 
-  handleAppStateChange = (path) => {
+  #handleAppStateChange = (path) => {
+    console.log(this.#appState.favorites.length);
     if (path === routes.favorites) {
       // this.render();
-      console.log(this.#appState.favorites.length);
+
     }
   }
 
@@ -34,6 +35,7 @@ export class MainView extends AbstractView {
     mainElement.innerHTML = `Число книг: ${this.#appState.favorites.length}`;
     // this.app.replaceChildren();
     this.main.appendChild(mainElement);
+    this.#appState.favorites.push('asd');
   }
 
   destroy() {}

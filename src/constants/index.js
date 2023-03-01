@@ -1,6 +1,6 @@
 export const routes = {
-  main: '',
-  favorites: 'favorites',
+  main: '#main',
+  favorites: '#favorites',
   default: 'default',
 };
 
