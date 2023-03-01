@@ -3,7 +3,7 @@ import { routes } from "./constants/index.js";
 
 
 class App {
-  #routes;
+  #routesMap;
   #currentView;
 
   appState = {
@@ -11,7 +11,7 @@ class App {
   };
 
   constructor(routes) {
-    this.#routes = routes;
+    this.#routesMap = routes;
     // this.navigate();
     // window.addEventListener('hashchange', this.navigate);
   }
@@ -20,21 +20,22 @@ class App {
     if (this.#currentView) {
       this.#currentView.destroy();
     }
-    console.log(location.hash, this.#routes.has(location.hash));
+    // TODO: удалить в конце разработки
+    console.log(location.hash, this.#routesMap.has(location.hash));
 
-    const View = this.#routes.has(location.hash)
-      ? this.#routes.get(location.hash).view
-      : this.#routes.get(routes.default).view;
+    const View = this.#routesMap.has(location.hash)
+      ? this.#routesMap.get(location.hash).view
+      : this.#routesMap.get(routes.default).view;
 
     this.#currentView = new View(this.appState);
     this.#currentView.render();
   }
 
-  render = () => {
+  start = () => {
     this.#navigate();
     window.addEventListener('hashchange', this.#navigate);
   }
 }
 
 const app = new App(routesMap);
-app.render();
+app.start();

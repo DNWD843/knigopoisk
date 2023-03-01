@@ -12,7 +12,6 @@ export class AbstractView {
   }
 
   render() {
-    console.log('AbstractView render');
     this.#app.replaceChildren();
   }
 
