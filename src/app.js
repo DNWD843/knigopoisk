@@ -8,7 +8,7 @@ class App {
   #currentView;
   #app = document.querySelector(`#${rootId}`);
 
-  appState = {
+  #appState = {
     favorites: [],
   };
 
@@ -29,12 +29,12 @@ class App {
       ? this.#routesMap.get(location.hash).view
       : this.#routesMap.get(routes.default).view;
 
-    this.#currentView = new View(this.appState);
+    this.#currentView = new View(this.#appState);
     this.#currentView.render();
   }
 
   render = () => {
-    const appLayout = new AppLayout();
+    const appLayout = new AppLayout(this.#appState);
     appLayout.render();
     this.#navigate();
     window.addEventListener('hashchange', this.#navigate);
