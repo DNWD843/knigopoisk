@@ -1,10 +1,12 @@
 import { routesMap } from "./constants/routesMap.js";
-import { routes } from "./constants/index.js";
+import { rootId, routes } from "./constants/index.js";
+import { AppLayout } from "./views/layout/index.js";
 
 
 class App {
   #routesMap;
   #currentView;
+  #app = document.querySelector(`#${rootId}`);
 
   appState = {
     favorites: [],
@@ -31,11 +33,13 @@ class App {
     this.#currentView.render();
   }
 
-  start = () => {
+  render = () => {
+    const appLayout = new AppLayout();
+    appLayout.render();
     this.#navigate();
     window.addEventListener('hashchange', this.#navigate);
   }
 }
 
 const app = new App(routesMap);
-app.start();
+app.render();
