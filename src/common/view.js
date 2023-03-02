@@ -23,7 +23,6 @@ export class AbstractView {
 
   render() {
    this.#appContentWrapper.innerHTML = '';
-   this.#appRootContainer.innerHTML = '';
   }
 
   destroy() {

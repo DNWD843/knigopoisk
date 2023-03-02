@@ -2,7 +2,7 @@ import { AbstractView } from "../../common/view.js";
 import { MAIN_VIEW_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/index.js";
-import { ContentBlock } from "../../components/ContentBlock/content-block.js";
+import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import "./main.css";
@@ -72,21 +72,21 @@ export class MainView extends AbstractView {
 
     const renderItems = this.#state[mainViewStateKeys.LOADING] ? [searchComponent] : [searchComponent, pageTitle];
 
-    this.#mainContentBlock = new ContentBlock({
+    const contentBlock = new ContentBlock({
       items: renderItems,
       renderFn: (elements) => {
         elements.forEach(element => {
-          this.#mainContentBlock.add(element);
+          contentBlock.add(element);
         })
       },
       contentBlockType: 'main',
       contentBlockClassName: generalClassNames.main,
     });
 
-    this.appContentWrapper.appendChild(this.#mainContentBlock.generate());
+    this.#mainContentBlock = contentBlock.generate();
+    this.appContentWrapper.appendChild(this.#mainContentBlock);
   }
 
   destroy() {
-    // this.appRootContainer.innerHTML = '';
   }
 }
