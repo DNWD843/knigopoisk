@@ -1,8 +1,9 @@
-import { generalClassNames, rootId } from "../constants/index.js";
+import { generalClassNames, loaderContainerId, loaderHtml, rootId } from "../constants/index.js";
 
 export class AbstractView {
   #appRootContainer = document.querySelector(`#${rootId}`)
   #appContentWrapper = document.createElement('div');
+  #loaderContainer = document.querySelector(`#${loaderContainerId}`);
 
   constructor() {
     generalClassNames.contentWrapperClassNames.forEach(className => {
@@ -19,6 +20,14 @@ export class AbstractView {
   }
   get appContentWrapper() {
     return this.#appContentWrapper;
+  }
+
+  setLoader() {
+    this.#loaderContainer.innerHTML = loaderHtml;
+  }
+
+  removeLoader() {
+    this.#loaderContainer.innerHTML = '';
   }
 
   render() {

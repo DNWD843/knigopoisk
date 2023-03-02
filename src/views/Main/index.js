@@ -5,13 +5,12 @@ import { HeaderComponent } from "../../components/Header/index.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
-import "./main.css";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
+import "./main.css";
 
 export class MainView extends AbstractView {
-  #appState;
-  #mainContentBlock;
+  #appState; #mainContentBlock;
 
   #state = {
     [mainViewStateKeys.LIST]: [],
@@ -51,6 +50,11 @@ export class MainView extends AbstractView {
 
     if (path === mainViewStateKeys.LOADING) {
       this.render();
+      if (this.#state[mainViewStateKeys.LOADING]) {
+        this.setLoader();
+      } else {
+        this.removeLoader();
+      }
     }
   }
 

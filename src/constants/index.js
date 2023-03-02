@@ -5,6 +5,7 @@ export const routes = {
 };
 
 export const rootId = 'root';
+export const loaderContainerId = 'loader-container';
 export const generalClassNames = {
   body: 'root',
   contentWrapperClassNames: ['page', 'root__container'],
@@ -14,9 +15,8 @@ export const generalClassNames = {
   pageTitle: 'page-title',
 };
 
-export const headerHtml = `
- 
-    <img class="logo" src="/static/icons/logo.svg" alt="Логотип"/>
-    <span>Header</span>
-
+export const loaderHtml = `
+  <div class="loader-wrapper">
+    <span class="loader-element">Загрузка данных...</span>
+  </div>
 `;

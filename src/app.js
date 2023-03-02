@@ -1,11 +1,10 @@
 import { routesMap } from "./constants/routesMap.js";
-import { routes } from "./constants/index.js";
+import { loaderContainerId, routes } from "./constants/index.js";
 import { appStateKeys } from "./constants/stateKeys.js";
 
 
 class App {
-  #routesMap;
-  #currentView;
+  #routesMap; #currentView; #loaderContainer;
   #appState = {
     [appStateKeys.FAVORITES]: [],
   };
@@ -34,6 +33,9 @@ class App {
   }
 
   render = () => {
+    this.#loaderContainer = document.createElement('div');
+    this.#loaderContainer.setAttribute('id', loaderContainerId);
+    document.body.appendChild(this.#loaderContainer);
     this.#navigate();
     window.addEventListener('hashchange', this.#navigate);
   }
