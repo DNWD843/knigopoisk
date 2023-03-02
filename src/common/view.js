@@ -1,21 +1,32 @@
-import { generalClassNames } from "../constants/index.js";
+import { generalClassNames, rootId } from "../constants/index.js";
 
 export class AbstractView {
-  #contentContainer = document.querySelector(`.${generalClassNames.main}`);
+  #appRootContainer = document.querySelector(`#${rootId}`)
+  #appContentWrapper = document.createElement('div');
 
+  constructor() {
+    generalClassNames.contentWrapperClassNames.forEach(className => {
+      this.#appContentWrapper.classList.add(className);
+    })
+
+  }
   setTitle(title) {
     document.title = title;
   }
 
-  get main() {
-    return this.#contentContainer;
+  get appRootContainer() {
+    return this.#appRootContainer
+  }
+  get appContentWrapper() {
+    return this.#appContentWrapper;
   }
 
   render() {
-    this.#contentContainer.replaceChildren();
+    this.#appContentWrapper.replaceChildren();
+    this.#appRootContainer.appendChild(this.#appContentWrapper);
   }
 
   destroy() {
-    return;
+
   }
 }

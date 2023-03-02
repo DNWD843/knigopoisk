@@ -1,7 +1,7 @@
 import { AbstractView } from "../../common/view.js";
 import { MAIN_VIEW_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
-import { routes } from "../../constants/index.js";
+import { HeaderComponent } from "../../components/header/index.js";
 
 
 export class MainView extends AbstractView {
@@ -23,20 +23,25 @@ export class MainView extends AbstractView {
 
   #handleAppStateChange = (path) => {
     console.log(this.#appState.favorites.length);
-    if (path === routes.favorites) {
-      // this.render();
-
-    }
+    this.render();
   }
 
   render() {
     super.render(); // вызываю очистку вьюшки из супер класса
-    const mainElement = document.createElement('div');
-    mainElement.innerHTML = `Число книг: ${this.#appState.favorites.length}`;
-    // this.app.replaceChildren();
-    this.main.appendChild(mainElement);
-    this.#appState.favorites.push('asd');
+    const header = new HeaderComponent(this.#appState).generate();
+
+    this.appContentWrapper.appendChild(header);
+    this.appRootContainer.appendChild(this.appContentWrapper);
+
+    // this.appContentWrapper.innerHTML = `Число книг: ${this.#appState.favorites.length}`;
+    const button = document.createElement('button');
+    button.textContent = 'add to favorites';
+    button.onclick = () => {
+      this.#appState.favorites.push('asd'); }
+    this.appContentWrapper.append(button);
   }
 
-  destroy() {}
+  destroy() {
+    this.appRootContainer.replaceChildren();
+  }
 }

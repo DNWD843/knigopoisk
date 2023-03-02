@@ -1,21 +1,16 @@
 import { routesMap } from "./constants/routesMap.js";
-import { rootId, routes } from "./constants/index.js";
-import { AppLayout } from "./views/layout/index.js";
+import { generalClassNames, rootId, routes } from "./constants/index.js";
 
 
 class App {
   #routesMap;
   #currentView;
-  #app = document.querySelector(`#${rootId}`);
-
   #appState = {
     favorites: [],
   };
 
   constructor(routes) {
     this.#routesMap = routes;
-    // this.navigate();
-    // window.addEventListener('hashchange', this.navigate);
   }
 
   #navigate = () => {
@@ -34,8 +29,6 @@ class App {
   }
 
   render = () => {
-    const appLayout = new AppLayout(this.#appState);
-    appLayout.render();
     this.#navigate();
     window.addEventListener('hashchange', this.#navigate);
   }
