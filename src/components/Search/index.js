@@ -1,5 +1,6 @@
 import { DivComponent } from "../../common/div-component.js";
 import './search.css';
+import { mainViewStateKeys } from "../../constants/stateKeys.js";
 
 export class SearchComponent extends DivComponent {
   #state; #searchInput; #searchButton;
@@ -10,7 +11,7 @@ export class SearchComponent extends DivComponent {
   }
 
   #setSearchValue = () => {
-    this.#state.searchQuery = this.#searchInput.value;
+    this.#state[mainViewStateKeys.SEARCH_QUERY] = this.#searchInput.value;
   }
 
   #handleKeyDown = (evt) => {
@@ -28,7 +29,7 @@ export class SearchComponent extends DivComponent {
         type="text"
         placeholder="Найти книгу или автора...."
         class="search__input"
-        value="${this.#state.searchQuery}"
+        value="${this.#state[mainViewStateKeys.SEARCH_QUERY]}"
       />
     </div>
     <button aria-label="Искать книги" class="search__button">

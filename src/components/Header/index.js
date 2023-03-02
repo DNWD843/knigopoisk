@@ -1,6 +1,6 @@
 import './header.css';
 import onChange from "on-change";
-import { onChangePaths } from "../../constants/onChangePaths.js";
+import { appStateKeys } from "../../constants/stateKeys.js";
 
 export class HeaderComponent {
   #appState;
@@ -12,7 +12,7 @@ export class HeaderComponent {
   }
 
   #handleChangeAppState = (path) => {
-    if (path === onChangePaths.FAVORITES) {
+    if (path === appStateKeys.FAVORITES) {
       console.log('path in handler', path);
       // const links = Array.from(this.#header.querySelectorAll('.menu__link'));
       // links.forEach(link => {
@@ -40,7 +40,7 @@ export class HeaderComponent {
             <img class="menu__link-icon" src="/static/icons/favorites.svg" alt="Иконка избранное" />
             <span class="menu__link-label">Избранное</span>
             <div class="favorites-counter-wrapper">
-              <span class="favorites-counter">${this.#appState.favorites.length}</span>
+              <span class="favorites-counter">${this.#appState[appStateKeys.FAVORITES].length}</span>
             </div>
           </a>
       </li>

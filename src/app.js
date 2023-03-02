@@ -1,12 +1,13 @@
 import { routesMap } from "./constants/routesMap.js";
 import { routes } from "./constants/index.js";
+import { appStateKeys } from "./constants/stateKeys.js";
 
 
 class App {
   #routesMap;
   #currentView;
   #appState = {
-    favorites: [],
+    [appStateKeys.FAVORITES]: [],
   };
 
   constructor(routes) {

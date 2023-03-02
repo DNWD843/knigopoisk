@@ -6,16 +6,16 @@ import { ContentBlock } from "../../components/ContentBlock/content-block.js";
 import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import "./main.css";
-import { onChangePaths } from "../../constants/onChangePaths.js";
+import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock;
 
   #state = {
-    list: [],
-    loading: false,
-    searchQuery: '',
-    offset: 0,
+    [mainViewStateKeys.LIST]: [],
+    [mainViewStateKeys.LOADING]: false,
+    [mainViewStateKeys.SEARCH_QUERY]: '',
+    [mainViewStateKeys.OFFSET]: 0,
   };
 
   constructor(appState) {
@@ -32,23 +32,28 @@ export class MainView extends AbstractView {
 }
 
   #handleAppStateChange = (path) => {
-    if (path === onChangePaths.FAVORITES) {
+    if (path === appStateKeys.FAVORITES) {
       console.log('handleAppStateChange', path);
-      console.log(this.#appState.favorites.length);
+      console.log(this.#appState[appStateKeys.FAVORITES].length);
     }
   }
 
   #handleLocalStateChange = async (path) => {
-    if (path === onChangePaths.SEARCH_QUERY) {
-      this.#state.loading = true;
-      const { docs = [] } = await this.#fetchBooks(this.#state.searchQuery, this.#state.offset);
-      this.#state.list = docs;
-      this.#state.loading = false;
+    console.log('handleLocalStateChange path:', path);
+    if (path === mainViewStateKeys.SEARCH_QUERY) {
+      this.#state[mainViewStateKeys.LOADING] = true;
+      const { docs = [] } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
+      this.#state[mainViewStateKeys.LIST] = docs;
+      this.#state[mainViewStateKeys.LOADING] = false;
+    }
+
+    if (path === mainViewStateKeys.LOADING) {
+
     }
   }
 
   render() {
-    super.render(); //TODO: Возможно это и не нужно, может стоит удалить?
+    super.render();
     this.#renderHeader();
     this.#renderContent();
     this.appRootContainer.appendChild(this.appContentWrapper);
@@ -63,7 +68,7 @@ export class MainView extends AbstractView {
     const searchComponent = new SearchComponent(this.#state).generate();
 
     const counter = document.createElement('span');
-    counter.textContent = `Количетсво книг: ${this.#appState.favorites.length}`;
+    counter.textContent = `Количетсво книг: ${this.#state[mainViewStateKeys.LIST].length}`;
 
     this.#mainContentBlock = new ContentBlock({
       items: [searchComponent, counter],

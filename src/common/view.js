@@ -22,7 +22,7 @@ export class AbstractView {
   }
 
   render() {
-    // this.#appContentWrapper.replaceChildren();
+    this.#appContentWrapper.replaceChildren();
   }
 
   destroy() {
