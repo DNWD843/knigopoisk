@@ -1,4 +1,4 @@
-import { MainView } from "../views/main/index.js";
+import { MainView } from "../views/Main/index.js";
 import { routes } from "./index.js";
 
 export const routesMap = new Map([

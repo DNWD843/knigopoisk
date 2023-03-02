@@ -22,8 +22,7 @@ export class AbstractView {
   }
 
   render() {
-    this.#appContentWrapper.replaceChildren();
-    this.#appRootContainer.appendChild(this.#appContentWrapper);
+    // this.#appContentWrapper.replaceChildren();
   }
 
   destroy() {
