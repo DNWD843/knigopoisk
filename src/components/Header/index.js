@@ -1,5 +1,6 @@
 import './header.css';
 import onChange from "on-change";
+import { onChangePaths } from "../../constants/onChangePaths.js";
 
 export class HeaderComponent {
   #appState;
@@ -11,16 +12,18 @@ export class HeaderComponent {
   }
 
   #handleChangeAppState = (path) => {
-    console.log('path in handler', path);
-    // const links = Array.from(this.#header.querySelectorAll('.menu__link'));
-    // links.forEach(link => {
-    //   if (link.href === path) {
-    //     link.classList.add('.menu__link_active');
-    //   } else {
-    //     link.classList.remove('.menu__link_active');
-    //   }
-    // })
-    // this.render();
+    if (path === onChangePaths.FAVORITES) {
+      console.log('path in handler', path);
+      // const links = Array.from(this.#header.querySelectorAll('.menu__link'));
+      // links.forEach(link => {
+      //   if (link.href === path) {
+      //     link.classList.add('.menu__link_active');
+      //   } else {
+      //     link.classList.remove('.menu__link_active');
+      //   }
+      // })
+      // this.render();
+    }
   }
 
   #getHeaderHtml = () => (`

@@ -2,11 +2,21 @@ import { DivComponent } from "../../common/div-component.js";
 import './search.css';
 
 export class SearchComponent extends DivComponent {
-  #state;
+  #state; #searchInput; #searchButton;
 
   constructor(state) {
     super();
     this.#state = state;
+  }
+
+  #setSearchValue = () => {
+    this.#state.searchQuery = this.#searchInput.value;
+  }
+
+  #handleKeyDown = (evt) => {
+    if (evt.code === 'Enter') {
+      this.#setSearchValue()
+    }
   }
 
   #getSearchHtml = () => (`
@@ -26,10 +36,24 @@ export class SearchComponent extends DivComponent {
     </button>
 `);
 
+  #setEventListeners = () => {
+    this.#searchButton.addEventListener('click', this.#setSearchValue);
+    this.#searchInput.addEventListener('keydown', this.#handleKeyDown);
+  }
+
   generate() {
     this.divElement.classList.add('search');
     this.divElement.innerHTML = this.#getSearchHtml();
 
+    this.#searchInput = this.divElement.querySelector('#search-input');
+    this.#searchButton = this.divElement.querySelector('.search__button');
+
+    this.#setEventListeners();
     return this.divElement;
+  }
+
+  destroy() {
+    this.#searchButton.removeEventListener('click', this.#setSearchValue);
+    this.#searchInput.removeEventListener('keydown', this.#handleKeyDown);
   }
 }

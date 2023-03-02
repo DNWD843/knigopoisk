@@ -6,6 +6,7 @@ import { ContentBlock } from "../../components/ContentBlock/content-block.js";
 import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import "./main.css";
+import { onChangePaths } from "../../constants/onChangePaths.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock;
@@ -20,13 +21,30 @@ export class MainView extends AbstractView {
   constructor(appState) {
     super();
     this.#appState = appState;
-    this.#appState = onChange(this.#appState, this.#handleAppStateChange)
-    this.setTitle(MAIN_VIEW_TITLE)
+    this.#appState = onChange(this.#appState, this.#handleAppStateChange);
+    this.#state = onChange(this.#state, this.#handleLocalStateChange);
+    this.setTitle(MAIN_VIEW_TITLE);
   }
 
+  #fetchBooks = async (query, offset) => {
+    const response = await fetch(`https://openlibrary.org/search.json?q=${query}&offset=${offset}`);
+    return response.json();
+}
+
   #handleAppStateChange = (path) => {
-    console.log(this.#appState.favorites.length);
-    this.render();
+    if (path === onChangePaths.FAVORITES) {
+      console.log('handleAppStateChange', path);
+      console.log(this.#appState.favorites.length);
+    }
+  }
+
+  #handleLocalStateChange = async (path) => {
+    if (path === onChangePaths.SEARCH_QUERY) {
+      this.#state.loading = true;
+      const { docs = [] } = await this.#fetchBooks(this.#state.searchQuery, this.#state.offset);
+      this.#state.list = docs;
+      this.#state.loading = false;
+    }
   }
 
   render() {
