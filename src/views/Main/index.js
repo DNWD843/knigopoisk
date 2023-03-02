@@ -42,9 +42,21 @@ export class MainView extends AbstractView {
   }
 
   #renderContent() {
-    this.#mainContentBlock = new ContentBlock({ contentBlockType: 'main', contentBlockClassName: generalClassNames.main });
-    const search = new SearchComponent(this.#state).generate();
-    this.#mainContentBlock.add(search);
+    const searchComponent = new SearchComponent(this.#state).generate();
+
+    const counter = document.createElement('span');
+    counter.textContent = `Количетсво книг: ${this.#appState.favorites.length}`;
+
+    this.#mainContentBlock = new ContentBlock({
+      items: [searchComponent, counter],
+      renderFn: (elements) => {
+        elements.forEach(element => {
+          this.#mainContentBlock.add(element);
+        })
+      },
+      contentBlockType: 'main',
+      contentBlockClassName: generalClassNames.main,
+    });
 
     this.appContentWrapper.appendChild(this.#mainContentBlock.generate());
   }

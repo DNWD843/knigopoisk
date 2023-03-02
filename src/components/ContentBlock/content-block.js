@@ -16,7 +16,7 @@ export class ContentBlock {
     }
 
     if (this.#items && this.#renderFn) {
-      this.#renderFn(this.#items, this.#contentContainer);
+      this.#renderFn(this.#items);
     }
     return this.#contentContainer;
   }
