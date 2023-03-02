@@ -22,10 +22,10 @@ export class AbstractView {
   }
 
   render() {
-    this.#appContentWrapper.replaceChildren();
+   this.#appContentWrapper.innerHTML = '';
+   this.#appRootContainer.innerHTML = '';
   }
 
   destroy() {
-
   }
 }

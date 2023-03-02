@@ -7,9 +7,11 @@ import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import "./main.css";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
+import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 
 export class MainView extends AbstractView {
-  #appState; #mainContentBlock;
+  #appState;
+  #mainContentBlock;
 
   #state = {
     [mainViewStateKeys.LIST]: [],
@@ -48,7 +50,7 @@ export class MainView extends AbstractView {
     }
 
     if (path === mainViewStateKeys.LOADING) {
-
+      this.render();
     }
   }
 
@@ -66,12 +68,12 @@ export class MainView extends AbstractView {
 
   #renderContent() {
     const searchComponent = new SearchComponent(this.#state).generate();
+    const pageTitle = new PageTitle(`Найдено книг - ${this.#state[mainViewStateKeys.LIST].length}`).generate();
 
-    const counter = document.createElement('span');
-    counter.textContent = `Количетсво книг: ${this.#state[mainViewStateKeys.LIST].length}`;
+    const renderItems = this.#state[mainViewStateKeys.LOADING] ? [searchComponent] : [searchComponent, pageTitle];
 
     this.#mainContentBlock = new ContentBlock({
-      items: [searchComponent, counter],
+      items: renderItems,
       renderFn: (elements) => {
         elements.forEach(element => {
           this.#mainContentBlock.add(element);
@@ -85,6 +87,6 @@ export class MainView extends AbstractView {
   }
 
   destroy() {
-    this.appRootContainer.replaceChildren();
+    // this.appRootContainer.innerHTML = '';
   }
 }

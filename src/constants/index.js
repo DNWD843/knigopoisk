@@ -11,6 +11,7 @@ export const generalClassNames = {
   header: 'header',
   main: 'content',
   footer: 'footer',
+  pageTitle: 'page-title',
 };
 
 export const headerHtml = `
