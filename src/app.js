@@ -6,7 +6,7 @@ import { appStateKeys } from "./constants/stateKeys.js";
 class App {
   #routesMap; #currentView; #loaderContainer;
   #appState = {
-    [appStateKeys.FAVORITES]: [],
+    [appStateKeys.FAVORITES]: new Set(),
   };
 
   constructor(routes) {

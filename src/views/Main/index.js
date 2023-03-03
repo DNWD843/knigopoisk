@@ -7,9 +7,9 @@ import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
-import "./main.css";
 import { Card } from "../../components/Card/Card.js";
 import { cardConfig } from "../../constants/cardConfig.js";
+import "./main.css";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -40,8 +40,7 @@ export class MainView extends AbstractView {
 
   #handleAppStateChange = (path) => {
     if (path === appStateKeys.FAVORITES) {
-      console.log('handleAppStateChange', path);
-      console.log(this.#appState[appStateKeys.FAVORITES].length);
+      this.render();
     }
   }
 
@@ -65,6 +64,14 @@ export class MainView extends AbstractView {
     }
   }
 
+  #onClickFavoritesButton = (book) => () => {
+    if (this.#appState[appStateKeys.FAVORITES].has(book)) {
+      this.#appState[appStateKeys.FAVORITES].delete(book);
+    } else {
+      this.#appState[appStateKeys.FAVORITES].add(book);
+    }
+  }
+
   render() {
     super.render();
     this.#renderHeader();
@@ -73,7 +80,7 @@ export class MainView extends AbstractView {
   }
 
   #renderHeader() {
-    const header = new HeaderComponent(this.#appState).generate();
+    const header = new HeaderComponent(this.#appState[appStateKeys.FAVORITES].size).generate();
     this.appContentWrapper.appendChild(header);
   }
 
@@ -81,21 +88,23 @@ export class MainView extends AbstractView {
     const searchComponent = new SearchComponent(this.#state).generate();
     const pageTitle = new PageTitle(`Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`).generate();
 
-    const items = this.#state[mainViewStateKeys.LIST].slice(0, 8);
+    const items = this.#state[mainViewStateKeys.LIST].slice(0, 8); //TODO: что-то сделать с органичением вывода книг на странице
     const cardsList = new ContentBlock({
       items: items,
       renderFn: cards => {
         cards.forEach(card => {
           const { cover_edition_key, subject, title, author_name } = card;
-
-          const cardElement = new Card({
+          const cardToRender = {
             imageSrc: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
             tag: subject ? subject[0] : 'Books for all',
             title,
             author: author_name,
-            isAddedToFavorites: false,
+            isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
+            handleClickFavoritesButton: this.#onClickFavoritesButton(card),
             cardConfig,
-          }).generate();
+          }
+
+          const cardElement = new Card(cardToRender).generate();
 
           cardsList.add(cardElement);
         })
@@ -125,5 +134,6 @@ export class MainView extends AbstractView {
   }
 
   destroy() {
+    super.destroy();
   }
 }

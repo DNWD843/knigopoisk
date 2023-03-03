@@ -1,29 +1,11 @@
 import './header.css';
-import onChange from "on-change";
-import { appStateKeys } from "../../constants/stateKeys.js";
 
 export class HeaderComponent {
-  #appState;
+  #favoritesSize;
   #header = document.createElement('header');
 
-  constructor(appState) {
-    this.#appState = appState;
-    this.#appState = onChange(this.#appState, this.#handleChangeAppState)
-  }
-
-  #handleChangeAppState = (path) => {
-    if (path === appStateKeys.FAVORITES) {
-      console.log('path in handler', path);
-      // const links = Array.from(this.#header.querySelectorAll('.menu__link'));
-      // links.forEach(link => {
-      //   if (link.href === path) {
-      //     link.classList.add('.menu__link_active');
-      //   } else {
-      //     link.classList.remove('.menu__link_active');
-      //   }
-      // })
-      // this.render();
-    }
+  constructor(favoritesSize) {
+    this.#favoritesSize = favoritesSize;
   }
 
   #getHeaderHtml = () => (`
@@ -40,7 +22,7 @@ export class HeaderComponent {
             <img class="menu__link-icon" src="/static/icons/favorites.svg" alt="Иконка избранное" />
             <span class="menu__link-label">Избранное</span>
             <div class="favorites-counter-wrapper">
-              <span class="favorites-counter">${this.#appState[appStateKeys.FAVORITES].length}</span>
+              <span class="favorites-counter">${this.#favoritesSize}</span>
             </div>
           </a>
       </li>

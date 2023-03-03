@@ -35,5 +35,6 @@ export class AbstractView {
   }
 
   destroy() {
+    this.#appRootContainer.innerHTML = '';
   }
 }

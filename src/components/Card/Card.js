@@ -1,14 +1,17 @@
 import './Card.css';
 
 export class Card {
-  #imageSrc; #tag; #title; #author; #isAddedToFavorites; #config;
+  #card; #imageSrc; #tag; #title; #author; #isAddedToFavorites; #handleClickFavoritesButton; #config;
   #cardImageElement; #cardTagElement; #cardTitleElement; #cardAuthorElement; #cardFavoritesButtonElement; #cardFavoritesButtonImageElement;
-  constructor({ imageSrc, tag, title, author, isAddedToFavorites, cardConfig }) {
+  constructor(card) {
+    this.#card = card;
+    const { imageSrc, tag, title, author, isAddedToFavorites, handleClickFavoritesButton, cardConfig } = card;
     this.#imageSrc = imageSrc;
     this.#tag = tag;
     this.#title = title;
     this.#author = author;
     this.#isAddedToFavorites = isAddedToFavorites;
+    this.#handleClickFavoritesButton = handleClickFavoritesButton;
     this.#config = cardConfig;
   }
 
@@ -17,6 +20,10 @@ export class Card {
       .content
       .querySelector(this.#config.cardSelector)
       .cloneNode(true)
+  }
+
+  #setEventListeners() {
+    this.#cardFavoritesButtonElement.addEventListener('click', this.#handleClickFavoritesButton);
   }
 
   generate() {
@@ -35,6 +42,8 @@ export class Card {
     this.#cardAuthorElement.textContent = this.#author;
     this.#cardFavoritesButtonElement.classList.add(this.#isAddedToFavorites ? this.#config.selectedClass : 'asd');
     this.#cardFavoritesButtonImageElement.src = this.#isAddedToFavorites ? this.#config.buttonImageSelectedSrc : this.#config.buttonImageDefaultSrc;
+
+    this.#setEventListeners();
 
     return cardNode;
   }
