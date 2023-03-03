@@ -13,6 +13,7 @@ export const generalClassNames = {
   main: 'content',
   footer: 'footer',
   pageTitle: 'page-title',
+  cards: 'cards',
 };
 
 export const loaderHtml = `

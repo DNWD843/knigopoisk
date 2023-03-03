@@ -8,15 +8,18 @@ import { generalClassNames } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import "./main.css";
+import { Card } from "../../components/Card/Card.js";
+import { cardConfig } from "../../constants/cardConfig.js";
 
 export class MainView extends AbstractView {
-  #appState; #mainContentBlock;
+  #appState; #mainContentBlock; #normalizeNumber;
 
   #state = {
     [mainViewStateKeys.LIST]: [],
     [mainViewStateKeys.LOADING]: false,
     [mainViewStateKeys.SEARCH_QUERY]: '',
     [mainViewStateKeys.OFFSET]: 0,
+    [mainViewStateKeys.NUM_FOUND]: 0,
   };
 
   constructor(appState) {
@@ -25,11 +28,14 @@ export class MainView extends AbstractView {
     this.#appState = onChange(this.#appState, this.#handleAppStateChange);
     this.#state = onChange(this.#state, this.#handleLocalStateChange);
     this.setTitle(MAIN_VIEW_TITLE);
+    this.#normalizeNumber = new Intl.NumberFormat('ru-RU').format;
   }
 
   #fetchBooks = async (query, offset) => {
     const response = await fetch(`https://openlibrary.org/search.json?q=${query}&offset=${offset}`);
-    return response.json();
+    const data = await response.json();
+    console.log(data);
+    return data;
 }
 
   #handleAppStateChange = (path) => {
@@ -43,8 +49,9 @@ export class MainView extends AbstractView {
     console.log('handleLocalStateChange path:', path);
     if (path === mainViewStateKeys.SEARCH_QUERY) {
       this.#state[mainViewStateKeys.LOADING] = true;
-      const { docs = [] } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
+      const { docs = [], numFound = 0 } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
       this.#state[mainViewStateKeys.LIST] = docs;
+      this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
       this.#state[mainViewStateKeys.LOADING] = false;
     }
 
@@ -72,22 +79,48 @@ export class MainView extends AbstractView {
 
   #renderContent() {
     const searchComponent = new SearchComponent(this.#state).generate();
-    const pageTitle = new PageTitle(`Найдено книг - ${this.#state[mainViewStateKeys.LIST].length}`).generate();
+    const pageTitle = new PageTitle(`Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`).generate();
 
-    const renderItems = this.#state[mainViewStateKeys.LOADING] ? [searchComponent] : [searchComponent, pageTitle];
+    const items = this.#state[mainViewStateKeys.LIST].slice(0, 8);
+    const cardsList = new ContentBlock({
+      items: items,
+      renderFn: cards => {
+        cards.forEach(card => {
+          const { cover_edition_key, subject, title, author_name } = card;
 
-    const contentBlock = new ContentBlock({
-      items: renderItems,
-      renderFn: (elements) => {
-        elements.forEach(element => {
-          contentBlock.add(element);
+          const cardElement = new Card({
+            imageSrc: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
+            tag: subject ? subject[0] : 'Books for all',
+            title,
+            author: author_name,
+            isAddedToFavorites: false,
+            cardConfig,
+          }).generate();
+
+          cardsList.add(cardElement);
         })
+      },
+      contentBlockType: 'div',
+      contentBlockClassName: generalClassNames.cards,
+    })
+
+    const cardsBlock = cardsList.generate();
+
+
+    const renderItems = this.#state[mainViewStateKeys.LOADING]
+      ? [searchComponent]
+      : [searchComponent, pageTitle, cardsBlock];
+
+    const mainContentBlock = new ContentBlock({
+      items: renderItems,
+      renderFn: elements => {
+        elements.forEach(element => { mainContentBlock.add(element); })
       },
       contentBlockType: 'main',
       contentBlockClassName: generalClassNames.main,
     });
 
-    this.#mainContentBlock = contentBlock.generate();
+    this.#mainContentBlock = mainContentBlock.generate();
     this.appContentWrapper.appendChild(this.#mainContentBlock);
   }
 
