@@ -7,9 +7,8 @@ import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
-import { Card } from "../../components/Card/Card.js";
-import { cardConfig } from "../../constants/cardConfig.js";
 import "./main.css";
+import { createCard } from "../../utils/createCard.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -93,18 +92,11 @@ export class MainView extends AbstractView {
       items: items,
       renderFn: cards => {
         cards.forEach(card => {
-          const { cover_edition_key, subject, title, author_name } = card;
-          const cardToRender = {
-            imageSrc: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
-            tag: subject ? subject[0] : 'Books for all',
-            title,
-            author: author_name,
+          const cardElement = createCard({
+            card,
             isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
             handleClickFavoritesButton: this.#onClickFavoritesButton(card),
-            cardConfig,
-          }
-
-          const cardElement = new Card(cardToRender).generate();
+          })
 
           cardsList.add(cardElement);
         })
@@ -135,5 +127,7 @@ export class MainView extends AbstractView {
 
   destroy() {
     super.destroy();
+    onChange.unsubscribe(this.#appState);
+    onChange.unsubscribe(this.#state);
   }
 }
