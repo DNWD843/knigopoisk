@@ -7,8 +7,8 @@ import { SearchComponent } from "../../components/Search/index.js";
 import { generalClassNames } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
-import "./main.css";
 import { createCard } from "../../utils/createCard.js";
+import "./Main.css";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -32,9 +32,7 @@ export class MainView extends AbstractView {
 
   #fetchBooks = async (query, offset) => {
     const response = await fetch(`https://openlibrary.org/search.json?q=${query}&offset=${offset}`);
-    const data = await response.json();
-    console.log(data);
-    return data;
+    return response.json();
 }
 
   #handleAppStateChange = (path) => {
@@ -44,7 +42,6 @@ export class MainView extends AbstractView {
   }
 
   #handleLocalStateChange = async (path) => {
-    console.log('handleLocalStateChange path:', path);
     if (path === mainViewStateKeys.SEARCH_QUERY) {
       this.#state[mainViewStateKeys.LOADING] = true;
       const { docs = [], numFound = 0 } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
@@ -88,6 +85,7 @@ export class MainView extends AbstractView {
     const pageTitle = new PageTitle(`Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`).generate();
 
     const items = this.#state[mainViewStateKeys.LIST].slice(0, 8); //TODO: что-то сделать с органичением вывода книг на странице
+
     const cardsList = new ContentBlock({
       items: items,
       renderFn: cards => {
@@ -103,17 +101,16 @@ export class MainView extends AbstractView {
       },
       contentBlockType: 'div',
       contentBlockClassName: generalClassNames.cards,
-    })
+    });
 
     const cardsBlock = cardsList.generate();
 
-
-    const renderItems = this.#state[mainViewStateKeys.LOADING]
+    const itemsToRender = this.#state[mainViewStateKeys.LOADING]
       ? [searchComponent]
       : [searchComponent, pageTitle, cardsBlock];
 
     const mainContentBlock = new ContentBlock({
-      items: renderItems,
+      items: itemsToRender,
       renderFn: elements => {
         elements.forEach(element => { mainContentBlock.add(element); })
       },
@@ -122,6 +119,7 @@ export class MainView extends AbstractView {
     });
 
     this.#mainContentBlock = mainContentBlock.generate();
+
     this.appContentWrapper.appendChild(this.#mainContentBlock);
   }
 

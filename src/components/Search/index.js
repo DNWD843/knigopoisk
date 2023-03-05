@@ -1,6 +1,6 @@
 import { DivComponent } from "../../common/div-component.js";
-import './search.css';
 import { mainViewStateKeys } from "../../constants/stateKeys.js";
+import './search.css';
 
 export class SearchComponent extends DivComponent {
   #state; #searchInput; #searchButton;
