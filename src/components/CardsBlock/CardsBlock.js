@@ -21,7 +21,7 @@ export class CardsBlock {
     }
   }
 
-  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = JSON.parse(card); }
+  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
 
   #renderCard = cards => {
     cards.forEach(card => {

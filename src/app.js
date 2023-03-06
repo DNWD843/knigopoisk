@@ -7,7 +7,7 @@ class App {
   #routesMap; #currentView; #loaderContainer;
   #appState = {
     [appStateKeys.FAVORITES]: new Set(),
-    [appStateKeys.SELECTED_CARD]: {},
+    [appStateKeys.SELECTED_CARD]: '{}',
   };
 
   constructor(routes) {
@@ -20,18 +20,17 @@ class App {
     }
     // TODO: удалить в конце разработки
     console.log(location.hash, this.#routesMap.has(location.hash));
-    const route = location.hash.includes('/') ? location.hash.split('/')[0] : location.hash;
+    const hash = location.hash.includes('/') ? location.hash.split('/')[0] : location.hash;
 
-    if (!location.hash) {
+    if (!hash || !this.#routesMap.has(hash)) {
       location.hash = routes.main;
-    } else {
-      const View = this.#routesMap.has(route)
-        ? this.#routesMap.get(route).view
-        : this.#routesMap.get(route).view;
-
-      this.#currentView = new View(this.#appState);
-      this.#currentView.render();
+      return;
     }
+
+    const View = this.#routesMap.get(hash).view;
+
+    this.#currentView = new View(this.#appState);
+    this.#currentView.render();
   }
 
   render = () => {
