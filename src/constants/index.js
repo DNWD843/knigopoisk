@@ -14,6 +14,7 @@ export const generalClassNames = {
   main: 'content',
   footer: 'footer',
   pageTitle: 'page-title',
+  pageSubTitle: 'page__sub-title',
   cards: 'cards',
   bookDetails: 'book-details',
 };
@@ -23,3 +24,5 @@ export const loaderHtml = `
     <span class="loader-element">Загрузка данных...</span>
   </div>
 `;
+
+export const cardsSetSize = 16;

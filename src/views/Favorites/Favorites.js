@@ -39,7 +39,7 @@ export class Favorites extends AbstractView {
     }
   }
 
-  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
+  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = JSON.parse(card); }
 
   #renderHeader() {
     const header = new HeaderComponent(this.#appState[appStateKeys.FAVORITES].size).generate();
@@ -52,7 +52,7 @@ export class Favorites extends AbstractView {
     const renderCard = cards => {
       cards.forEach(card => {
         const cardElement = createCard({
-          card,
+          card: JSON.parse(card),
           isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
           handleClickFavoritesButton: this.#onClickFavoritesButton(card),
           handleClickOnCard: this.#onClickCard(card),

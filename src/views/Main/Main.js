@@ -4,22 +4,24 @@ import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { SearchComponent } from "../../components/Search/Search.js";
-import { generalClassNames, routes } from "../../constants/index.js";
+import { cardsSetSize, generalClassNames, routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createCard } from "../../utils/createCard.js";
-import "./Main.css";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
+import "./Main.css";
+import { createPageSubTitle } from "../../utils/createPgaeSubTitle.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
 
   #state = {
-    [mainViewStateKeys.LIST]: [],
+    [mainViewStateKeys.CARDS_SET]: new Set(),
     [mainViewStateKeys.LOADING]: false,
     [mainViewStateKeys.SEARCH_QUERY]: '',
     [mainViewStateKeys.OFFSET]: 0,
     [mainViewStateKeys.NUM_FOUND]: 0,
+
   };
 
   constructor(appState) {
@@ -50,7 +52,7 @@ export class MainView extends AbstractView {
     if (path === mainViewStateKeys.SEARCH_QUERY) {
       this.#state[mainViewStateKeys.LOADING] = true;
       const { docs = [], numFound = 0 } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
-      this.#state[mainViewStateKeys.LIST] = docs;
+      this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.slice(0, cardsSetSize).map(el => JSON.stringify(el)));
       this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
       this.#state[mainViewStateKeys.LOADING] = false;
     }
@@ -67,6 +69,7 @@ export class MainView extends AbstractView {
 
   #onClickFavoritesButton = (card) => (evt) => {
     evt.stopPropagation();
+
     if (this.#appState[appStateKeys.FAVORITES].has(card)) {
       this.#appState[appStateKeys.FAVORITES].delete(card);
     } else {
@@ -74,7 +77,7 @@ export class MainView extends AbstractView {
     }
   }
 
-  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
+  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = JSON.parse(card); }
 
   render() {
     super.render();
@@ -90,14 +93,16 @@ export class MainView extends AbstractView {
 
   #renderContent() {
     const searchComponent = new SearchComponent(this.#state).generate();
-    const pageTitle = new PageTitle(`Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`).generate();
+    const pageTitle = new PageTitle(
+      `Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`
+    ).generate();
 
-    const cardsToRender = this.#state[mainViewStateKeys.LIST].slice(0, 8); //TODO: что-то сделать с органичением вывода книг на странице
+    const pageSubTitle = createPageSubTitle(this.#state[mainViewStateKeys.NUM_FOUND] ? `Показано книг - ${cardsSetSize}` : '');
 
     const renderCard = cards => {
       cards.forEach(card => {
         const cardElement = createCard({
-          card,
+          card: JSON.parse(card),
           isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
           handleClickFavoritesButton: this.#onClickFavoritesButton(card),
           handleClickOnCard: this.#onClickCard(card),
@@ -108,7 +113,7 @@ export class MainView extends AbstractView {
     }
 
     const cardsList = new ContentBlock({
-      items: cardsToRender,
+      items: this.#state[mainViewStateKeys.CARDS_SET],
       renderFn: renderCard,
       contentBlockType: 'div',
       contentBlockClassName: generalClassNames.cards,
@@ -118,7 +123,7 @@ export class MainView extends AbstractView {
 
     const mainContentBlockElements = this.#state[mainViewStateKeys.LOADING]
       ? [searchComponent]
-      : [searchComponent, pageTitle, cardsBlock];
+      : [searchComponent, pageTitle, pageSubTitle, cardsBlock];
 
     this.#mainContentBlock = createMainContentBlock(mainContentBlockElements);
     this.appContentWrapper.appendChild(this.#mainContentBlock);

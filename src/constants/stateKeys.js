@@ -1,7 +1,7 @@
 export const mainViewStateKeys = {
   SEARCH_QUERY: 'searchQuery',
   LOADING: 'loading',
-  LIST: 'list',
+  CARDS_SET: 'list',
   OFFSET: 'offset',
   NUM_FOUND: 'numFound',
 };
