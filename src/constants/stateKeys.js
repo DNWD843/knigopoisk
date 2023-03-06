@@ -8,4 +8,5 @@ export const mainViewStateKeys = {
 
 export const appStateKeys = {
   FAVORITES: 'favorites',
+  SELECTED_CARD: 'selectedCard',
 };

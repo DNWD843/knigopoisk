@@ -7,6 +7,7 @@ class App {
   #routesMap; #currentView; #loaderContainer;
   #appState = {
     [appStateKeys.FAVORITES]: new Set(),
+    [appStateKeys.SELECTED_CARD]: {},
   };
 
   constructor(routes) {

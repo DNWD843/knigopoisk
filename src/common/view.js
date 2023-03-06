@@ -30,6 +30,10 @@ export class AbstractView {
     this.#loaderContainer.innerHTML = '';
   }
 
+  redirectTo(path) {
+    location.hash = path;
+  }
+
   render() {
     this.#appContentWrapper.innerHTML = '';
     this.#appRootContainer.innerHTML = '';

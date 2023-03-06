@@ -1,6 +1,7 @@
 export const routes = {
   main: '#main',
   favorites: '#favorites',
+  details: '#details',
   default: 'default',
 };
 
@@ -14,6 +15,7 @@ export const generalClassNames = {
   footer: 'footer',
   pageTitle: 'page-title',
   cards: 'cards',
+  bookDetails: 'book-details',
 };
 
 export const loaderHtml = `

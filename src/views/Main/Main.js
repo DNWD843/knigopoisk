@@ -4,7 +4,7 @@ import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/index.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { SearchComponent } from "../../components/Search/index.js";
-import { generalClassNames } from "../../constants/index.js";
+import { generalClassNames, routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createCard } from "../../utils/createCard.js";
@@ -39,6 +39,10 @@ export class MainView extends AbstractView {
     if (path === appStateKeys.FAVORITES) {
       this.render();
     }
+
+    if (path === appStateKeys.SELECTED_CARD) {
+      this.redirectTo(routes.details);
+    }
   }
 
   #handleLocalStateChange = async (path) => {
@@ -60,13 +64,16 @@ export class MainView extends AbstractView {
     }
   }
 
-  #onClickFavoritesButton = (book) => () => {
-    if (this.#appState[appStateKeys.FAVORITES].has(book)) {
-      this.#appState[appStateKeys.FAVORITES].delete(book);
+  #onClickFavoritesButton = (card) => (evt) => {
+    evt.stopPropagation();
+    if (this.#appState[appStateKeys.FAVORITES].has(card)) {
+      this.#appState[appStateKeys.FAVORITES].delete(card);
     } else {
-      this.#appState[appStateKeys.FAVORITES].add(book);
+      this.#appState[appStateKeys.FAVORITES].add(card);
     }
   }
+
+  #onClickOnCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
 
   render() {
     super.render();
@@ -84,33 +91,36 @@ export class MainView extends AbstractView {
     const searchComponent = new SearchComponent(this.#state).generate();
     const pageTitle = new PageTitle(`Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`).generate();
 
-    const items = this.#state[mainViewStateKeys.LIST].slice(0, 8); //TODO: что-то сделать с органичением вывода книг на странице
+    const cardsToRender = this.#state[mainViewStateKeys.LIST].slice(0, 8); //TODO: что-то сделать с органичением вывода книг на странице
+
+    const renderCard = cards => {
+      cards.forEach(card => {
+        const cardElement = createCard({
+          card,
+          isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
+          handleClickFavoritesButton: this.#onClickFavoritesButton(card),
+          handleClickOnCard: this.#onClickOnCard(card),
+        })
+
+        cardsList.add(cardElement);
+      })
+    }
 
     const cardsList = new ContentBlock({
-      items: items,
-      renderFn: cards => {
-        cards.forEach(card => {
-          const cardElement = createCard({
-            card,
-            isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
-            handleClickFavoritesButton: this.#onClickFavoritesButton(card),
-          })
-
-          cardsList.add(cardElement);
-        })
-      },
+      items: cardsToRender,
+      renderFn: renderCard,
       contentBlockType: 'div',
       contentBlockClassName: generalClassNames.cards,
     });
 
     const cardsBlock = cardsList.generate();
 
-    const itemsToRender = this.#state[mainViewStateKeys.LOADING]
+    const mainBlockElements = this.#state[mainViewStateKeys.LOADING]
       ? [searchComponent]
       : [searchComponent, pageTitle, cardsBlock];
 
     const mainContentBlock = new ContentBlock({
-      items: itemsToRender,
+      items: mainBlockElements,
       renderFn: elements => {
         elements.forEach(element => { mainContentBlock.add(element); })
       },

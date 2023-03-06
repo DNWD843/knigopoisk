@@ -6,7 +6,7 @@ import onChange from "on-change";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { createCard } from "../../utils/createCard.js";
-import { generalClassNames } from "../../constants/index.js";
+import { generalClassNames, routes } from "../../constants/index.js";
 import './Favorites.css';
 
 export class Favorites extends AbstractView {
@@ -23,15 +23,22 @@ export class Favorites extends AbstractView {
     if (path === appStateKeys.FAVORITES) {
       this.render();
     }
-  }
 
-  #onClickFavoritesButton = (book) => () => {
-    if (this.#appState[appStateKeys.FAVORITES].has(book)) {
-      this.#appState[appStateKeys.FAVORITES].delete(book);
-    } else {
-      this.#appState[appStateKeys.FAVORITES].add(book);
+    if (path === appStateKeys.SELECTED_CARD) {
+      this.redirectTo(routes.details);
     }
   }
+
+  #onClickFavoritesButton = (card) => (evt) => {
+    evt.stopPropagation()
+    if (this.#appState[appStateKeys.FAVORITES].has(card)) {
+      this.#appState[appStateKeys.FAVORITES].delete(card);
+    } else {
+      this.#appState[appStateKeys.FAVORITES].add(card);
+    }
+  }
+
+  #onClickOnCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
 
   #renderHeader() {
     const header = new HeaderComponent(this.#appState[appStateKeys.FAVORITES].size).generate();
@@ -49,6 +56,7 @@ export class Favorites extends AbstractView {
             card,
             isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
             handleClickFavoritesButton: this.#onClickFavoritesButton(card),
+            handleClickOnCard: this.#onClickOnCard(card),
           })
 
           cardsList.add(cardElement);
