@@ -10,7 +10,7 @@ import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createCard } from "../../utils/createCard.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import "./Main.css";
-import { createPageSubTitle } from "../../utils/createPgaeSubTitle.js";
+import { createPageSubTitle } from "../../utils/createPageSubTitle.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -52,9 +52,10 @@ export class MainView extends AbstractView {
     if (path === mainViewStateKeys.SEARCH_QUERY) {
       this.#state[mainViewStateKeys.LOADING] = true;
       const { docs = [], numFound = 0 } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
-      this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.slice(0, cardsSetSize).map(el => JSON.stringify(el)));
+      this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(el => JSON.stringify(el)));
       this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
       this.#state[mainViewStateKeys.LOADING] = false;
+      console.log(docs);
     }
 
     if (path === mainViewStateKeys.LOADING) {
