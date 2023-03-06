@@ -20,13 +20,14 @@ class App {
     }
     // TODO: удалить в конце разработки
     console.log(location.hash, this.#routesMap.has(location.hash));
+    const route = location.hash.includes('/') ? location.hash.split('/')[0] : location.hash;
 
     if (!location.hash) {
       location.hash = routes.main;
     } else {
-      const View = this.#routesMap.has(location.hash)
-        ? this.#routesMap.get(location.hash).view
-        : this.#routesMap.get(routes.default).view;
+      const View = this.#routesMap.has(route)
+        ? this.#routesMap.get(route).view
+        : this.#routesMap.get(route).view;
 
       this.#currentView = new View(this.#appState);
       this.#currentView.render();

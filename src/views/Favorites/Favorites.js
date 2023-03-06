@@ -26,7 +26,7 @@ export class Favorites extends AbstractView {
     }
 
     if (path === appStateKeys.SELECTED_CARD) {
-      this.redirectTo(routes.details);
+      this.redirectTo(`${routes.details}${this.#appState[appStateKeys.SELECTED_CARD].key.replace('works/', '')}`);
     }
   }
 
