@@ -1,5 +1,5 @@
 import { AbstractView } from "../../common/view.js";
-import { HeaderComponent } from "../../components/Header/index.js";
+import { HeaderComponent } from "../../components/Header/Header.js";
 import { appStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";

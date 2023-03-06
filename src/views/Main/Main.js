@@ -1,14 +1,15 @@
 import { AbstractView } from "../../common/view.js";
 import { MAIN_VIEW_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
-import { HeaderComponent } from "../../components/Header/index.js";
+import { HeaderComponent } from "../../components/Header/Header.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
-import { SearchComponent } from "../../components/Search/index.js";
+import { SearchComponent } from "../../components/Search/Search.js";
 import { generalClassNames, routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createCard } from "../../utils/createCard.js";
 import "./Main.css";
+import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -73,7 +74,7 @@ export class MainView extends AbstractView {
     }
   }
 
-  #onClickOnCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
+  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
 
   render() {
     super.render();
@@ -99,7 +100,7 @@ export class MainView extends AbstractView {
           card,
           isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
           handleClickFavoritesButton: this.#onClickFavoritesButton(card),
-          handleClickOnCard: this.#onClickOnCard(card),
+          handleClickOnCard: this.#onClickCard(card),
         })
 
         cardsList.add(cardElement);
@@ -115,21 +116,11 @@ export class MainView extends AbstractView {
 
     const cardsBlock = cardsList.generate();
 
-    const mainBlockElements = this.#state[mainViewStateKeys.LOADING]
+    const mainContentBlockElements = this.#state[mainViewStateKeys.LOADING]
       ? [searchComponent]
       : [searchComponent, pageTitle, cardsBlock];
 
-    const mainContentBlock = new ContentBlock({
-      items: mainBlockElements,
-      renderFn: elements => {
-        elements.forEach(element => { mainContentBlock.add(element); })
-      },
-      contentBlockType: 'main',
-      contentBlockClassName: generalClassNames.main,
-    });
-
-    this.#mainContentBlock = mainContentBlock.generate();
-
+    this.#mainContentBlock = createMainContentBlock(mainContentBlockElements);
     this.appContentWrapper.appendChild(this.#mainContentBlock);
   }
 

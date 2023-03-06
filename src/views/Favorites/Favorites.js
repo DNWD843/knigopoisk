@@ -1,12 +1,13 @@
 import { AbstractView } from "../../common/view.js";
 import { FAVORITES_VIEW_TITLE } from "../../constants/titles.js";
 import { appStateKeys } from "../../constants/stateKeys.js";
-import { HeaderComponent } from "../../components/Header/index.js";
+import { HeaderComponent } from "../../components/Header/Header.js";
 import onChange from "on-change";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { createCard } from "../../utils/createCard.js";
 import { generalClassNames, routes } from "../../constants/index.js";
+import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import './Favorites.css';
 
 export class Favorites extends AbstractView {
@@ -38,7 +39,7 @@ export class Favorites extends AbstractView {
     }
   }
 
-  #onClickOnCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
+  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
 
   #renderHeader() {
     const header = new HeaderComponent(this.#appState[appStateKeys.FAVORITES].size).generate();
@@ -48,38 +49,31 @@ export class Favorites extends AbstractView {
   #renderContent() {
     const pageTitle = new PageTitle('Избранное').generate();
 
+    const renderCard = cards => {
+      cards.forEach(card => {
+        const cardElement = createCard({
+          card,
+          isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
+          handleClickFavoritesButton: this.#onClickFavoritesButton(card),
+          handleClickOnCard: this.#onClickCard(card),
+        })
+
+        cardsList.add(cardElement);
+      })
+    }
+
     const cardsList = new ContentBlock({
       items: Array.from(this.#appState[appStateKeys.FAVORITES]),
-      renderFn: cards => {
-        cards.forEach(card => {
-          const cardElement = createCard({
-            card,
-            isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
-            handleClickFavoritesButton: this.#onClickFavoritesButton(card),
-            handleClickOnCard: this.#onClickOnCard(card),
-          })
-
-          cardsList.add(cardElement);
-        })
-      },
+      renderFn: renderCard,
       contentBlockType: 'div',
       contentBlockClassName: generalClassNames.cards,
     })
 
     const cardsBlock = cardsList.generate();
 
-    const itemsToRender = [pageTitle, cardsBlock];
+    const mainContentBlockElements = [pageTitle, cardsBlock];
 
-    const mainContentBlock = new ContentBlock({
-      items: itemsToRender,
-      renderFn: elements => {
-        elements.forEach(element => { mainContentBlock.add(element); })
-      },
-      contentBlockType: 'main',
-      contentBlockClassName: generalClassNames.main,
-    });
-
-    this.#mainContentBlock = mainContentBlock.generate();
+    this.#mainContentBlock = createMainContentBlock(mainContentBlockElements);
 
     this.appContentWrapper.appendChild(this.#mainContentBlock);
   }
