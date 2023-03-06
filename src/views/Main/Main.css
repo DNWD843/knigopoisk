@@ -2,13 +2,6 @@
     padding-top: 40px;
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(2, 288px);
-    gap: 25px;
-}
-
 .page__sub-title {
     margin: 0;
     padding-bottom: 20px;

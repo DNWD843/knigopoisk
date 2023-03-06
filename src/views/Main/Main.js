@@ -2,15 +2,14 @@ import { AbstractView } from "../../common/view.js";
 import { MAIN_VIEW_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
-import { ContentBlock } from "../../components/ContentBlock/ContentBlock.js";
 import { SearchComponent } from "../../components/Search/Search.js";
-import { cardsSetSize, generalClassNames, routes } from "../../constants/index.js";
+import { routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
-import { createCard } from "../../utils/createCard.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
-import "./Main.css";
 import { createPageSubTitle } from "../../utils/createPageSubTitle.js";
+import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
+import "./Main.css";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -68,18 +67,6 @@ export class MainView extends AbstractView {
     }
   }
 
-  #onClickFavoritesButton = (card) => (evt) => {
-    evt.stopPropagation();
-
-    if (this.#appState[appStateKeys.FAVORITES].has(card)) {
-      this.#appState[appStateKeys.FAVORITES].delete(card);
-    } else {
-      this.#appState[appStateKeys.FAVORITES].add(card);
-    }
-  }
-
-  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = JSON.parse(card); }
-
   render() {
     super.render();
     this.#renderHeader();
@@ -97,30 +84,11 @@ export class MainView extends AbstractView {
     const pageTitle = new PageTitle(
       `Найдено книг - ${this.#normalizeNumber(this.#state[mainViewStateKeys.NUM_FOUND])}`
     ).generate();
-
-    const pageSubTitle = createPageSubTitle(this.#state[mainViewStateKeys.NUM_FOUND] ? `Показано книг - ${cardsSetSize}` : '');
-
-    const renderCard = cards => {
-      cards.forEach(card => {
-        const cardElement = createCard({
-          card: JSON.parse(card),
-          isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(card),
-          handleClickFavoritesButton: this.#onClickFavoritesButton(card),
-          handleClickOnCard: this.#onClickCard(card),
-        })
-
-        cardsList.add(cardElement);
-      })
-    }
-
-    const cardsList = new ContentBlock({
-      items: this.#state[mainViewStateKeys.CARDS_SET],
-      renderFn: renderCard,
-      contentBlockType: 'div',
-      contentBlockClassName: generalClassNames.cards,
-    });
-
-    const cardsBlock = cardsList.generate();
+    const pageSubTitle = createPageSubTitle(this.#state[mainViewStateKeys.NUM_FOUND] ? `Показано книг - ${this.#state[mainViewStateKeys.CARDS_SET].size}` : '');
+    const cardsBlock = new CardsBlock({
+      appState: this.#appState,
+      cardsSet: this.#state[mainViewStateKeys.CARDS_SET] },
+    ).generate();
 
     const mainContentBlockElements = this.#state[mainViewStateKeys.LOADING]
       ? [searchComponent]
