@@ -1,5 +1,5 @@
 import { AbstractView } from "../../common/view.js";
-import { MAIN_VIEW_TITLE } from "../../constants/titles.js";
+import { APP_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import { SearchComponent } from "../../components/Search/Search.js";
@@ -31,7 +31,7 @@ export class MainView extends AbstractView {
     this.#appState = appState;
     this.#appState = onChange(this.#appState, this.#handleAppStateChange);
     this.#state = onChange(this.#state, this.#handleLocalStateChange);
-    this.setTitle(MAIN_VIEW_TITLE);
+    this.setTitle(APP_TITLE);
     this.#normalizeNumber = new Intl.NumberFormat('ru-RU').format;
   }
 

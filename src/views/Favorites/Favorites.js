@@ -1,5 +1,4 @@
 import { AbstractView } from "../../common/view.js";
-import { FAVORITES_VIEW_TITLE } from "../../constants/titles.js";
 import { appStateKeys } from "../../constants/stateKeys.js";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import onChange from "on-change";
@@ -16,7 +15,6 @@ export class Favorites extends AbstractView {
     super();
     this.#appState = appState;
     this.#appState = onChange(this.#appState, this.#handleAppStateChange);
-    this.setTitle(FAVORITES_VIEW_TITLE);
   }
 
   #handleAppStateChange = (path) => {
