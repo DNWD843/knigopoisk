@@ -6,10 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="./dist/app.js" type="module"></script>
+    <link rel="icon" href="./static/icons/favicon.ico" />
     <link rel="stylesheet" href="./dist/bundle.css" />
     <link rel="stylesheet" href="./static/global.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root" class="root"></div>
+
+    <template id="card-template">
+      <article class="card">
+        <div class="card__image-container">
+          <img class="card__image" src="" alt=""/>
+        </div>
+        <div class="card__info">
+          <div class="card__description">
+            <span class="card__tag"></span>
+            <h3 class="card__title"></h3>
+            <span class="card__author"></span>
+          </div>
+          <div class="card__actions">
+            <button class="card__favorites-button">
+              <img class="card__favorites-button-image" src="" alt="" />
+            </button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <template id="book-details-template">
+      <div class="book-details">
+        <img class="book-details__cover" src="" alt="" />
+        <div class="book-details__info-block">
+          <p class="book-details__info">
+            Автор:
+            <span class="book-details__author accented"></span>
+          </p>
+          <p class="book-details__info">
+            Категория:
+            <span class="book-details__category accented"></span>
+          </p>
+          <p class="book-details__info">
+            Первая публикация:
+            <span class="book-details__publish-year accented"></span>
+          </p>
+          <p class="book-details__info">
+            Число страниц:
+            <span class="book-details__pages-quantity accented"></span>
+          </p>
+        </div>
+        <div class="book-details__actions">
+          <button class="book-details__favorites-button"></button>
+        </div>
+        <div class="book-details__tags"></div>
+      </div>
+    </template>
+
+    <template id="pagination-template">
+      <div class="pagination">
+        <button id="pagination__prev-button" class="pagination__button"></button>
+        <span class="pagination__position"></span>
+        <button id="pagination__next-button" class="pagination__button"></button>
+      </div>
+    </template>
+
   </body>
 </html>

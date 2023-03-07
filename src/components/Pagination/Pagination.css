@@ -1,0 +1,31 @@
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    width: 100%;
+}
+
+.pagination__button {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--black);
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.pagination__button:disabled {
+    cursor: not-allowed;
+    color: #858585;
+}
+
+.pagination__position {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--black);
+    letter-spacing: 1px;
+}

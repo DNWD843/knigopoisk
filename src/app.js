@@ -1,36 +1,42 @@
 import { routesMap } from "./constants/routesMap.js";
-import { routes } from "./constants/index.js";
+import { loaderContainerId, routes } from "./constants/index.js";
+import { appStateKeys } from "./constants/stateKeys.js";
 
 
 class App {
-  #routes;
-  #currentView;
-
-  appState = {
-    favorites: [],
+  #routesMap; #currentView; #loaderContainer;
+  #appState = {
+    [appStateKeys.FAVORITES]: new Set(),
+    [appStateKeys.SELECTED_CARD]: '{}',
   };
 
   constructor(routes) {
-    this.#routes = routes;
-    // this.navigate();
-    // window.addEventListener('hashchange', this.navigate);
+    this.#routesMap = routes;
   }
 
   #navigate = () => {
     if (this.#currentView) {
       this.#currentView.destroy();
     }
-    console.log(location.hash, this.#routes.has(location.hash));
+    // TODO: удалить в конце разработки
+    console.log(location.hash, this.#routesMap.has(location.hash));
+    const hash = location.hash.includes('/') ? location.hash.split('/')[0] : location.hash;
 
-    const View = this.#routes.has(location.hash)
-      ? this.#routes.get(location.hash).view
-      : this.#routes.get(routes.default).view;
+    if (!hash || !this.#routesMap.has(hash)) {
+      location.hash = routes.main;
+      return;
+    }
 
-    this.#currentView = new View(this.appState);
+    const View = this.#routesMap.get(hash).view;
+
+    this.#currentView = new View(this.#appState);
     this.#currentView.render();
   }
 
   render = () => {
+    this.#loaderContainer = document.createElement('div');
+    this.#loaderContainer.setAttribute('id', loaderContainerId);
+    document.body.appendChild(this.#loaderContainer);
     this.#navigate();
     window.addEventListener('hashchange', this.#navigate);
   }

@@ -1,0 +1,63 @@
+.book-details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: [firstRow] auto [secondRow] 1fr [thirdRow] auto [lastRow];
+    gap: 23px;
+}
+
+.book-details__cover {
+    grid-row: firstRow/thirdRow;
+    grid-column: 1;
+    width: 300px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.book-details__info-block {
+    grid-row: firstRow;
+    grid-column: 2;
+    display: grid;
+    row-gap: 8px;
+}
+
+.book-details__info {
+    margin: 0;
+}
+
+.accented {
+    font-weight: 700;
+}
+
+.book-details__actions {
+    grid-row: secondRow;
+    grid-column: 2;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.book-details__favorites-button {
+    color: #f2f2f2;
+    background-color: #0d0d0d;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    cursor: pointer;
+    transition: all ease-in-out .125s;
+}
+
+.book-details__favorites-button:hover {
+    background-color: #3a3a3a;
+}
+
+.book-details__tags {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    grid-row: thirdRow;
+    grid-column: 1/-1;
+}

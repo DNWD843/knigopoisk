@@ -1,0 +1,10 @@
+.book-details__tag {
+    padding: 6px 8px;
+    border: 1px solid var(--black);
+    border-radius: 6px;
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    white-space: nowrap;
+}

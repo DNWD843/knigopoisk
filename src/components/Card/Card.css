@@ -1,0 +1,97 @@
+.card {
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+    transition: all ease-in-out .125s;
+    max-width: 180px;
+}
+
+.card:hover {
+    box-shadow: 0 0 10px var(--black);
+}
+
+.card__image-container {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #B8B8B8;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.card__image {
+    object-position: top;
+    object-fit: contain;
+    max-height: 120px;
+}
+.card__info {
+    background-color: var(--black);
+    color: var(--white);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    height: 148px;
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+.card__description {
+    margin-bottom: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card__tag {
+    font-weight: 300;
+    font-size: 10px;
+    line-height: 15px;
+    color: #DEDEDE;
+}
+
+.card__title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    color: white;
+    margin: 0 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card__author {
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    color: white;
+}
+
+.card__favorites-button {
+    padding: 6px 8px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid #fafafa;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all ease-in-out .125s;
+}
+
+.card__favorites-button:hover {
+    background-color: #4d4d4d;
+}
+
+.card__favorites-button.selected {
+    background-color: white;
+}
+
+.card__favorites-button.selected:hover {
+    background-color: #c0c0c0;
+}
