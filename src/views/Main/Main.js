@@ -9,7 +9,10 @@ import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import { createPageSubTitle } from "../../utils/createPageSubTitle.js";
 import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
+import { api } from "../../api/Api.js";
+import { apiDataKeys } from "../../constants/apiResponseKeys.js";
 import "./Main.css";
+import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -32,10 +35,7 @@ export class MainView extends AbstractView {
     this.#normalizeNumber = new Intl.NumberFormat('ru-RU').format;
   }
 
-  #fetchBooks = async (query, offset) => {
-    const response = await fetch(`https://openlibrary.org/search.json?q=${query}&offset=${offset}`);
-    return response.json();
-}
+  #fetchBooks = async (query, offset) => await api.getBooks(query, offset);
 
   #handleAppStateChange = (path) => {
     if (path === appStateKeys.FAVORITES) {
@@ -43,7 +43,8 @@ export class MainView extends AbstractView {
     }
 
     if (path === appStateKeys.SELECTED_CARD) {
-      const cardId = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]).key.replace('works/', '');
+      const doc = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]);
+      const cardId = extractIdFromDocKey(doc);
       this.redirectTo(`${routes.details}${cardId}`);
     }
   }
@@ -51,8 +52,9 @@ export class MainView extends AbstractView {
   #handleLocalStateChange = async (path) => {
     if (path === mainViewStateKeys.SEARCH_QUERY) {
       this.#state[mainViewStateKeys.LOADING] = true;
-      const { docs = [], numFound = 0 } = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
-      this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(el => JSON.stringify(el)));
+      const data = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
+      const {[apiDataKeys.docs]: docs = [], [apiDataKeys.numFound]: numFound = 0} = data;
+      this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(doc => JSON.stringify(doc)));
       this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
       this.#state[mainViewStateKeys.LOADING] = false;
     }
