@@ -108,9 +108,7 @@ export class MainView extends AbstractView {
       ? new Pagination({
           onClickPrevButton: this.#onClickPrevButton,
           onClickNextButton: this.#onClickNextButton,
-          isFirstPage: (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.NUM_FOUND] > this.#state[mainViewStateKeys.CARDS_SET].size),
-          isLastPage: (this.#state[mainViewStateKeys.OFFSET] > 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < MAX_CARDS_ON_PAGE),
-          isSinglePage: (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < MAX_CARDS_ON_PAGE),
+          state: this.#state,
         }).generate()
       : null;
 

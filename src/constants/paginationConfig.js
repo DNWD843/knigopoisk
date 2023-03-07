@@ -1,8 +1,9 @@
 export const paginationConfig = {
-  paginationTemplateSelector: '#pagination-template',
+  templateSelector: '#pagination-template',
   paginationElementSelector: '.pagination',
-  paginationPrevButtonSelector: '#pagination__prev-button',
-  paginationNextButtonSelector: '#pagination__next-button',
+  prevButtonSelector: '#pagination__prev-button',
+  nextButtonSelector: '#pagination__next-button',
+  positionSelector: '.pagination__position',
   prevButtonLabel: '&#10229; Предыдущая страница',
   nextButtonLabel: `Следующая страница &#10230;`,
 };
