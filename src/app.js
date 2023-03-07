@@ -18,8 +18,7 @@ class App {
     if (this.#currentView) {
       this.#currentView.destroy();
     }
-    // TODO: удалить в конце разработки
-    console.log(location.hash, this.#routesMap.has(location.hash));
+
     const hash = location.hash.includes('/') ? location.hash.split('/')[0] : location.hash;
 
     if (!hash || !this.#routesMap.has(hash)) {
@@ -33,12 +32,16 @@ class App {
     this.#currentView.render();
   }
 
+  #setEventListeners() {
+    window.addEventListener('hashchange', this.#navigate);
+  }
+
   render = () => {
     this.#loaderContainer = document.createElement('div');
     this.#loaderContainer.setAttribute('id', loaderContainerId);
     document.body.appendChild(this.#loaderContainer);
     this.#navigate();
-    window.addEventListener('hashchange', this.#navigate);
+    this.#setEventListeners();
   }
 }
 

@@ -73,7 +73,5 @@ export class BookDetails extends AbstractView {
   destroy() {
     super.destroy();
     onChange.unsubscribe(this.#appState);
-    this.#appState[appStateKeys.SELECTED_CARD] = {};
-
   }
 }
