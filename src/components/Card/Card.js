@@ -43,7 +43,7 @@ export class Card {
     this.#cardTagElement.textContent = this.#tag;
     this.#cardTitleElement.textContent = this.#title;
     this.#cardAuthorElement.textContent = this.#author;
-    this.#cardFavoritesButtonElement.classList.add(this.#isAddedToFavorites ? this.#config.selectedClass : 'asd');
+    this.#cardFavoritesButtonElement.classList.add(this.#isAddedToFavorites ? this.#config.selectedClass : 'inactive');
     this.#cardFavoritesButtonImageElement.src = this.#isAddedToFavorites ? this.#config.buttonImageSelectedSrc : this.#config.buttonImageDefaultSrc;
 
     this.#setEventListeners();

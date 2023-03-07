@@ -1,0 +1,15 @@
+export const bookDetailsConfig = {
+  templateSelector: '#book-details-template',
+  bookDetailsSelector: '.book-details',
+  bookDetailsCoverSelector: '.book-details__cover',
+  bookDetailsAuthorSelector: '.book-details__author',
+  bookDetailsCategorySelector: '.book-details__category',
+  bookDetailsPublishYearSelector: '.book-details__publish-year',
+  bookDetailsPagesQuantitySelector: '.book-details__pages-quantity',
+  bookDetailsFavoritesButtonSelector: '.book-details__favorites-button',
+  bookDetailsTagsContainerSelector: '.book-details__tags',
+  selectedClass: 'selected',
+  removeFromFavoritesLabel: 'Удалить из избранного',
+  addToFavoritesLabel: 'Добавить в избранное',
+  bookDetailsTagSelector: 'book-details__tag',
+};
