@@ -3,7 +3,7 @@ import { APP_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import { SearchComponent } from "../../components/Search/Search.js";
-import { routes } from "../../constants/index.js";
+import { MAX_CARDS_ON_PAGE, routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
@@ -11,8 +11,9 @@ import { createPageSubTitle } from "../../utils/createPageSubTitle.js";
 import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
 import { api } from "../../api/Api.js";
 import { apiDataKeys } from "../../constants/apiResponseKeys.js";
-import "./Main.css";
 import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
+import "./Main.css";
+import { Pagination } from "../../components/Pagination/Pagination.js";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -35,7 +36,16 @@ export class MainView extends AbstractView {
     this.#normalizeNumber = new Intl.NumberFormat('ru-RU').format;
   }
 
-  #fetchBooks = async (query, offset) => await api.getBooks(query, offset);
+  #fetchBooks = async (query, offset) => {
+    // await api.getBooks(query, offset);
+    this.#state[mainViewStateKeys.LOADING] = true;
+    const data = await api.getBooks(query, offset);
+    const {[apiDataKeys.docs]: docs = [], [apiDataKeys.numFound]: numFound = 0} = data;
+
+    this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(doc => JSON.stringify(doc)));
+    this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
+    this.#state[mainViewStateKeys.LOADING] = false;
+  }
 
   #handleAppStateChange = (path) => {
     if (path === appStateKeys.FAVORITES) {
@@ -50,13 +60,8 @@ export class MainView extends AbstractView {
   }
 
   #handleLocalStateChange = async (path) => {
-    if (path === mainViewStateKeys.SEARCH_QUERY) {
-      this.#state[mainViewStateKeys.LOADING] = true;
-      const data = await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
-      const {[apiDataKeys.docs]: docs = [], [apiDataKeys.numFound]: numFound = 0} = data;
-      this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(doc => JSON.stringify(doc)));
-      this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
-      this.#state[mainViewStateKeys.LOADING] = false;
+    if (path === mainViewStateKeys.SEARCH_QUERY || path === mainViewStateKeys.OFFSET) {
+      await this.#fetchBooks(this.#state[mainViewStateKeys.SEARCH_QUERY], this.#state[mainViewStateKeys.OFFSET]);
     }
 
     if (path === mainViewStateKeys.LOADING) {
@@ -67,6 +72,14 @@ export class MainView extends AbstractView {
         this.removeLoader();
       }
     }
+  }
+
+  #onClickPrevButton = () => {
+    this.#state[mainViewStateKeys.OFFSET] -= MAX_CARDS_ON_PAGE;
+  }
+
+  #onClickNextButton = () => {
+    this.#state[mainViewStateKeys.OFFSET] += MAX_CARDS_ON_PAGE;
   }
 
   render() {
@@ -91,10 +104,19 @@ export class MainView extends AbstractView {
       appState: this.#appState,
       cardsSet: this.#state[mainViewStateKeys.CARDS_SET] },
     ).generate();
+    const pagination = this.#state[mainViewStateKeys.NUM_FOUND]
+      ? new Pagination({
+          onClickPrevButton: this.#onClickPrevButton,
+          onClickNextButton: this.#onClickNextButton,
+          isFirstPage: (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.NUM_FOUND] > this.#state[mainViewStateKeys.CARDS_SET].size),
+          isLastPage: (this.#state[mainViewStateKeys.OFFSET] > 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < MAX_CARDS_ON_PAGE),
+          isSinglePage: (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < MAX_CARDS_ON_PAGE),
+        }).generate()
+      : null;
 
     const mainContentBlockElements = this.#state[mainViewStateKeys.LOADING]
       ? [searchComponent]
-      : [searchComponent, pageTitle, pageSubTitle, cardsBlock];
+      : [searchComponent, pageTitle, pageSubTitle, cardsBlock, pagination];
 
     this.#mainContentBlock = createMainContentBlock(mainContentBlockElements);
     this.appContentWrapper.appendChild(this.#mainContentBlock);

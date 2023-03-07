@@ -4,6 +4,7 @@
     cursor: pointer;
     position: relative;
     transition: all ease-in-out .125s;
+    max-width: 180px;
 }
 
 .card:hover {
@@ -41,6 +42,9 @@
 
 .card__description {
     margin-bottom: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card__tag {
@@ -56,10 +60,8 @@
     line-height: 16px;
     color: white;
     margin: 0 0 8px;
-    word-wrap: normal;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 32px;
 }
 
 .card__author {

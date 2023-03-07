@@ -25,4 +25,4 @@ export const loaderHtml = `
   </div>
 `;
 
-export const cardsSetSize = 16;
+export const MAX_CARDS_ON_PAGE = 100;

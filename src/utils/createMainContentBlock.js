@@ -6,7 +6,11 @@ export function createMainContentBlock(elements = []) {
   const mainContentBlock = new ContentBlock({
     items: elements,
     renderFn: elements => {
-      elements.forEach(element => { mainContentBlock.add(element); })
+      elements.forEach(element => {
+        if (element) {
+          mainContentBlock.add(element);
+        }
+      })
     },
     contentBlockType: 'main',
     contentBlockClassName: generalClassNames.main,
