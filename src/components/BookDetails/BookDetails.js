@@ -8,19 +8,20 @@ export class BookDetailsComponent {
   #bookDetailsPagesQuantityElement;#bookDetailsFavoritesButtonElement;
 
   constructor({ card, isAddedToFavorites, handleClickFavoritesButton, config }) {
+    this.#config = config;
     this.#card = card;
-    this.#title = this.#card.title;
-    this.#imageSrc = this.#card['cover_edition_key']
-      ? `https://covers.openlibrary.org/b/olid/${this.#card['cover_edition_key']}-M.jpg`
-      : 'https://cdn2.vectorstock.com/i/thumb-large/51/21/four-books-or-book-of-documents-vintage-engraving-vector-19015121.jpg';
-    this.#tags = this.#card['subject_facet'];
-    this.#category = this.#card['subject_facet'] ? this.#card['subject_facet'][0] : 'Books for everyone';
-    this.#author = this.#card['author_name'];
-    this.#firstPublishYear = this.#card['first_publish_year'] || '-';
-    this.#pagesQuantity = this.#card['number_of_pages_median'] || '-';
+    this.#title = this.#card[this.#config.title];
+    this.#imageSrc = this.#card[this.#config.cover]
+      ? this.#config.getImageSrc(this.#card[this.#config.cover])
+      : this.#config.defaultImageSrc;
+    this.#tags = this.#card[this.#config.tags];
+    this.#category = this.#card[this.#config.tags] ? this.#card[this.#config.tags][0] : this.#config.defaultCategory;
+    this.#author = this.#card[this.#config.author];
+    this.#firstPublishYear = this.#card[this.#config.firstPublishYear] || this.#config.defaultValue;
+    this.#pagesQuantity = this.#card[this.#config.pagesQuantity] || this.#config.defaultValue;
     this.#isAddedToFavorites = isAddedToFavorites;
     this.#handleClickFavoritesButton = handleClickFavoritesButton;
-    this.#config = config;
+
   }
   #getTemplate() {
     return document.querySelector(this.#config.templateSelector)

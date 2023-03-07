@@ -55,7 +55,6 @@ export class MainView extends AbstractView {
       this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(el => JSON.stringify(el)));
       this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
       this.#state[mainViewStateKeys.LOADING] = false;
-      console.log(docs);
     }
 
     if (path === mainViewStateKeys.LOADING) {

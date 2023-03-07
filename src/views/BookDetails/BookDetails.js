@@ -7,6 +7,7 @@ import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import { bookDetailsConfig } from "../../constants/bookDetailsConfig.js";
 import { BookDetailsComponent } from "../../components/BookDetails/BookDetails.js";
 import onChange from "on-change";
+import { apiDataKeys } from "../../constants/apiResponseKeys.js";
 
 export class BookDetails extends AbstractView {
   #appState; #mainContentBlock; #card;
@@ -45,7 +46,7 @@ export class BookDetails extends AbstractView {
       card: this.#card,
       isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(this.#appState[appStateKeys.SELECTED_CARD]),
       handleClickFavoritesButton: this.#onClickFavoritesButton(this.#appState[appStateKeys.SELECTED_CARD]),
-      config: bookDetailsConfig,
+      config: { ...bookDetailsConfig, ...apiDataKeys.doc },
     }
 
     const bookDetails = new BookDetailsComponent(bookDetailsProps).generate();
