@@ -1,3 +1,3 @@
 export function extractIdFromDocKey(doc) {
-  return doc.key.replace('works/', '');
+  return doc.key.replace('/works/', '');
 }

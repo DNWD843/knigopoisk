@@ -6,6 +6,7 @@ import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { routes } from "../../constants/index.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
+import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
 import './Favorites.css';
 
 export class Favorites extends AbstractView {
@@ -23,8 +24,9 @@ export class Favorites extends AbstractView {
     }
 
     if (path === appStateKeys.SELECTED_CARD) {
-      const cardId = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]).key.replace('works/', '');
-      this.redirectTo(`${routes.details}${cardId}`);
+      const doc = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]);
+      const docId = extractIdFromDocKey(doc);
+      this.redirectTo(`${routes.details}/${docId}`);
     }
   }
 

@@ -44,8 +44,8 @@ export class MainView extends AbstractView {
 
     if (path === appStateKeys.SELECTED_CARD) {
       const doc = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]);
-      const cardId = extractIdFromDocKey(doc);
-      this.redirectTo(`${routes.details}${cardId}`);
+      const docId = extractIdFromDocKey(doc);
+      this.redirectTo(`${routes.details}/${docId}`);
     }
   }
 
