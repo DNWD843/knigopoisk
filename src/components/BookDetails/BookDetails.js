@@ -2,20 +2,22 @@ import './BookDetails.css';
 import { TagsList } from "../TagsList/TagsList.js";
 
 export class BookDetailsComponent {
-  #title;#imageSrc;#tags;#category;#author;#firstPublishYear;#pagesQuantity;#isAddedToFavorites;#handleClickFavoritesButton;#config;
+  #card;#title;#imageSrc;#tags;#category;#author;#firstPublishYear;#pagesQuantity;#isAddedToFavorites;#handleClickFavoritesButton;#config;
   #bookDetailsNode;#bookDetailsCoverElement;
   #bookDetailsTagsContainerElement;#bookDetailsCategoryElement;#bookDetailsAuthorElement;#bookDetailsPublishYearElement;
   #bookDetailsPagesQuantityElement;#bookDetailsFavoritesButtonElement;
 
-  constructor(props) {
-    const { title, imageSrc, tags, category, author, firstPublishYear, pagesQuantity, isAddedToFavorites, handleClickFavoritesButton, config } = props;
-    this.#title = title;
-    this.#imageSrc = imageSrc;
-    this.#tags = tags;
-    this.#category = category;
-    this.#author = author;
-    this.#firstPublishYear = firstPublishYear;
-    this.#pagesQuantity = pagesQuantity;
+  constructor({ card, isAddedToFavorites, handleClickFavoritesButton, config }) {
+    this.#card = card;
+    this.#title = this.#card.title;
+    this.#imageSrc = this.#card['cover_edition_key']
+      ? `https://covers.openlibrary.org/b/olid/${this.#card['cover_edition_key']}-M.jpg`
+      : 'https://cdn2.vectorstock.com/i/thumb-large/51/21/four-books-or-book-of-documents-vintage-engraving-vector-19015121.jpg';
+    this.#tags = this.#card['subject_facet'];
+    this.#category = this.#card['subject_facet'] ? this.#card['subject_facet'][0] : 'Books for everyone';
+    this.#author = this.#card['author_name'];
+    this.#firstPublishYear = this.#card['first_publish_year'] || '-';
+    this.#pagesQuantity = this.#card['number_of_pages_median'] || '-';
     this.#isAddedToFavorites = isAddedToFavorites;
     this.#handleClickFavoritesButton = handleClickFavoritesButton;
     this.#config = config;

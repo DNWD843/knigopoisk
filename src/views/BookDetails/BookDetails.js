@@ -6,13 +6,21 @@ import { routes } from "../../constants/index.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import { bookDetailsConfig } from "../../constants/bookDetailsConfig.js";
 import { BookDetailsComponent } from "../../components/BookDetails/BookDetails.js";
+import onChange from "on-change";
 
 export class BookDetails extends AbstractView {
   #appState; #mainContentBlock; #card;
   constructor(appState) {
     super();
     this.#appState = appState;
+    this.#appState = onChange(this.#appState, this.#handleChangeAppState);
     this.#card = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]);
+  }
+
+  #handleChangeAppState = (path) => {
+    if (path === appStateKeys.FAVORITES) {
+      this.render();
+    }
   }
 
   #onClickFavoritesButton = (card) => (evt) => {
@@ -33,23 +41,15 @@ export class BookDetails extends AbstractView {
   #renderContent() {
     const pageTitle = new PageTitle(this.#card.title).generate();
 
-    const props = {
-      title: this.#card.title,
-      imageSrc: this.#card['cover_edition_key']
-        ? `https://covers.openlibrary.org/b/olid/${this.#card['cover_edition_key']}-M.jpg`
-        : 'https://cdn2.vectorstock.com/i/thumb-large/51/21/four-books-or-book-of-documents-vintage-engraving-vector-19015121.jpg',
-      tags: this.#card['subject_facet'],
-      category: this.#card['subject_facet'] ? this.#card['subject_facet'][0] : 'Books for everyone',
-      author: this.#card['author_name'],
-      firstPublishYear: this.#card['first_publish_year'] || '-',
-      pagesQuantity: this.#card['number_of_pages_median'] || '-',
+    const bookDetailsProps = {
+      card: this.#card,
       isAddedToFavorites: this.#appState[appStateKeys.FAVORITES].has(this.#appState[appStateKeys.SELECTED_CARD]),
       handleClickFavoritesButton: this.#onClickFavoritesButton(this.#appState[appStateKeys.SELECTED_CARD]),
       config: bookDetailsConfig,
     }
 
-    const bookDetails = new BookDetailsComponent(props).generate();
-
+    const bookDetails = new BookDetailsComponent(bookDetailsProps).generate();
+3
     const mainContentBlockElements = [pageTitle, bookDetails];
     this.#mainContentBlock = createMainContentBlock(mainContentBlockElements);
 
@@ -70,6 +70,9 @@ export class BookDetails extends AbstractView {
   }
 
   destroy() {
+    super.destroy();
+    onChange.unsubscribe(this.#appState);
     this.#appState[appStateKeys.SELECTED_CARD] = {};
+
   }
 }
