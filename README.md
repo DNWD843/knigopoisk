@@ -12,7 +12,7 @@ An application for searching and exploring books.
 - https://openlibrary.org  
 - https://covers.openlibrary.org  
 
-#### available scripts  
+#### available scripts:  
 `npm run build` - creates a project build,   
 `npm run start` - creates a project build and starts application,  
 `npm run watch` - starts changes watcher  
