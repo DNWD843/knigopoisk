@@ -3,7 +3,7 @@ import { APP_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import { SearchComponent } from "../../components/Search/Search.js";
-import { MAX_CARDS_ON_PAGE } from "../../constants/index.js";
+import { MAX_CARDS_ON_PAGE, routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
@@ -12,6 +12,7 @@ import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
 import { api } from "../../api/Api.js";
 import { apiDataKeys } from "../../constants/apiResponseKeys.js";
 import { Pagination } from "../../components/Pagination/Pagination.js";
+import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
 import "./Main.css";
 
 export class MainView extends AbstractView {
@@ -75,6 +76,23 @@ export class MainView extends AbstractView {
     this.#state[mainViewStateKeys.OFFSET] += MAX_CARDS_ON_PAGE;
   }
 
+  #onClickFavoritesButton = card => (evt) => {
+    evt.stopPropagation();
+
+    if (this.#appState[appStateKeys.FAVORITES].has(card)) {
+      this.#appState[appStateKeys.FAVORITES].delete(card);
+    } else {
+      this.#appState[appStateKeys.FAVORITES].add(card);
+    }
+  }
+
+  #onClickCard = card => () => {
+    this.#appState[appStateKeys.SELECTED_CARD] = card;
+    const doc = JSON.parse(card);
+    const docId = extractIdFromDocKey(doc);
+    this.redirectTo(`${routes.details}/${docId}`);
+  }
+
   render() {
     super.render();
     this.#renderHeader();
@@ -96,7 +114,8 @@ export class MainView extends AbstractView {
     const cardsBlock = new CardsBlock({
       appState: this.#appState,
       cardsSet: this.#state[mainViewStateKeys.CARDS_SET],
-      redirectFn: this.redirectTo,
+      onClickCard: this.#onClickCard,
+      onClickFavoritesButton: this.#onClickFavoritesButton,
     }).generate();
     const pagination = this.#state[mainViewStateKeys.NUM_FOUND]
       ? new Pagination({
