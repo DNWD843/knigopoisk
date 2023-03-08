@@ -7,6 +7,8 @@ class Api {
      console.error(err);
    }
  }
+
+ getImageSrc = coverKey => `https://covers.openlibrary.org/b/olid/${coverKey}-M.jpg`;
 }
 
 export const api = new Api();

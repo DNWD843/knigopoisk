@@ -4,7 +4,6 @@ export const apiDataKeys = {
   doc: {
     title: 'title',
     cover: 'cover_edition_key',
-    getImageSrc: (coverKey) => `https://covers.openlibrary.org/b/olid/${coverKey}-M.jpg`,
     defaultImageSrc: 'https://cdn2.vectorstock.com/i/thumb-large/51/21/four-books-or-book-of-documents-vintage-engraving-vector-19015121.jpg',
     tags: 'subject_facet',
     defaultCategory: 'Books for everyone',

@@ -1,8 +1,9 @@
 import './BookDetails.css';
 import { TagsList } from "../TagsList/TagsList.js";
+import { api } from "../../api/Api.js";
 
 export class BookDetailsComponent {
-  #card;#title;#imageSrc;#tags;#category;#author;#firstPublishYear;#pagesQuantity;#isAddedToFavorites;#handleClickFavoritesButton;#config;
+  #card;#title;#tags;#category;#author;#firstPublishYear;#pagesQuantity;#isAddedToFavorites;#handleClickFavoritesButton;#config;
   #bookDetailsNode;#bookDetailsCoverElement;
   #bookDetailsTagsContainerElement;#bookDetailsCategoryElement;#bookDetailsAuthorElement;#bookDetailsPublishYearElement;
   #bookDetailsPagesQuantityElement;#bookDetailsFavoritesButtonElement;
@@ -11,9 +12,6 @@ export class BookDetailsComponent {
     this.#config = config;
     this.#card = card;
     this.#title = this.#card[this.#config.title];
-    this.#imageSrc = this.#card[this.#config.cover]
-      ? this.#config.getImageSrc(this.#card[this.#config.cover])
-      : this.#config.defaultImageSrc;
     this.#tags = this.#card[this.#config.tags];
     this.#category = this.#card[this.#config.tags] ? this.#card[this.#config.tags][0] : this.#config.defaultCategory;
     this.#author = this.#card[this.#config.author];
@@ -23,6 +21,9 @@ export class BookDetailsComponent {
     this.#handleClickFavoritesButton = handleClickFavoritesButton;
 
   }
+
+  #getImageSrc = () => api.getImageSrc(this.#card[this.#config.cover])
+
   #getTemplate() {
     return document.querySelector(this.#config.templateSelector)
       .content
@@ -44,7 +45,9 @@ export class BookDetailsComponent {
     this.#bookDetailsFavoritesButtonElement = this.#bookDetailsNode.querySelector(this.#config.bookDetailsFavoritesButtonSelector);
     this.#bookDetailsTagsContainerElement = this.#bookDetailsNode.querySelector(this.#config.bookDetailsTagsContainerSelector);
 
-    this.#bookDetailsCoverElement.src = this.#imageSrc;
+    this.#bookDetailsCoverElement.src = this.#card[this.#config.cover]
+      ? this.#getImageSrc()
+      : this.#config.defaultImageSrc;
     this.#bookDetailsCoverElement.alt = `Обложка книги ${this.#title}`;
     this.#bookDetailsCategoryElement.textContent = this.#category;
     this.#bookDetailsAuthorElement.textContent = this.#author;

@@ -3,7 +3,7 @@ import { APP_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import { SearchComponent } from "../../components/Search/Search.js";
-import { MAX_CARDS_ON_PAGE, routes } from "../../constants/index.js";
+import { MAX_CARDS_ON_PAGE } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
@@ -11,9 +11,8 @@ import { createPageSubTitle } from "../../utils/createPageSubTitle.js";
 import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
 import { api } from "../../api/Api.js";
 import { apiDataKeys } from "../../constants/apiResponseKeys.js";
-import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
-import "./Main.css";
 import { Pagination } from "../../components/Pagination/Pagination.js";
+import "./Main.css";
 
 export class MainView extends AbstractView {
   #appState; #mainContentBlock; #normalizeNumber;
@@ -50,12 +49,6 @@ export class MainView extends AbstractView {
   #handleAppStateChange = (path) => {
     if (path === appStateKeys.FAVORITES) {
       this.render();
-    }
-
-    if (path === appStateKeys.SELECTED_CARD) {
-      const doc = JSON.parse(this.#appState[appStateKeys.SELECTED_CARD]);
-      const docId = extractIdFromDocKey(doc);
-      this.redirectTo(`${routes.details}/${docId}`);
     }
   }
 
@@ -102,8 +95,9 @@ export class MainView extends AbstractView {
     const pageSubTitle = createPageSubTitle(this.#state[mainViewStateKeys.NUM_FOUND] ? `Показано книг - ${this.#state[mainViewStateKeys.CARDS_SET].size}` : '');
     const cardsBlock = new CardsBlock({
       appState: this.#appState,
-      cardsSet: this.#state[mainViewStateKeys.CARDS_SET] },
-    ).generate();
+      cardsSet: this.#state[mainViewStateKeys.CARDS_SET],
+      redirectFn: this.redirectTo,
+    }).generate();
     const pagination = this.#state[mainViewStateKeys.NUM_FOUND]
       ? new Pagination({
           onClickPrevButton: this.#onClickPrevButton,

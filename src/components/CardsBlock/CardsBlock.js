@@ -1,17 +1,19 @@
 import { createCard } from "../../utils/createCard.js";
 import { appStateKeys } from "../../constants/stateKeys.js";
 import { ContentBlock } from "../ContentBlock/ContentBlock.js";
-import { generalClassNames } from "../../constants/index.js";
+import { generalClassNames, routes } from "../../constants/index.js";
+import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
 import './CardsBlock.css';
 
 export class CardsBlock {
-  #appState; #cardsSet; #cardsList;
-  constructor({ appState, cardsSet }) {
+  #appState; #cardsSet; #cardsList;#redirectTo;
+  constructor({ appState, cardsSet, redirectFn }) {
     this.#appState = appState;
     this.#cardsSet = cardsSet;
+    this.#redirectTo = redirectFn;
   }
 
-  #onClickFavoritesButton = (card) => (evt) => {
+  #onClickFavoritesButton = card => (evt) => {
     evt.stopPropagation();
 
     if (this.#appState[appStateKeys.FAVORITES].has(card)) {
@@ -21,7 +23,12 @@ export class CardsBlock {
     }
   }
 
-  #onClickCard = (card) => () => { this.#appState[appStateKeys.SELECTED_CARD] = card; }
+  #onClickCard = card => () => {
+    this.#appState[appStateKeys.SELECTED_CARD] = card;
+    const doc = JSON.parse(card);
+    const docId = extractIdFromDocKey(doc);
+    this.#redirectTo(`${routes.details}/${docId}`);
+  }
 
   #renderCard = cards => {
     cards.forEach(card => {

@@ -24,7 +24,7 @@ export class Card {
       .cloneNode(true)
   }
 
-  #setEventListeners() {
+  #setEventListeners = () => {
     this.#cardFavoritesButtonElement.addEventListener('click', this.#handleClickFavoritesButton);
     this.#cardNode.addEventListener('click', this.#handleClickOnCard);
   }

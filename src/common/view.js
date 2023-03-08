@@ -30,7 +30,7 @@ export class AbstractView {
     this.#loaderContainer.innerHTML = '';
   }
 
-  redirectTo(path) {
+  redirectTo = (path) => {
     location.hash = path;
   }
 
