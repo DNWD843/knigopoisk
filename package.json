@@ -1,7 +1,7 @@
 {
   "name": "library",
   "version": "1.0.0",
-  "description": "Library application using Javascript and it`s own mini-framework",
+  "description": "Knigopoisk application using Javascript",
   "main": "app.js",
   "type": "module",
   "eslintConfig": {
@@ -13,13 +13,12 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "start": "live-server",
-    "watch": "rollup -c --watch",
-    "deploy": "npm run build && gh-pages -d dist"
+    "start": "npm run build&&live-server",
+    "watch": "rollup -c --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DNWD843/library.git"
+    "url": "git+https://github.com/DNWD843/knigopoisk.git"
   },
   "keywords": [
     "javascript",
@@ -28,7 +27,7 @@
   "author": "Dmitry Neklyudov",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DNWD843/library/issues"
+    "url": "https://github.com/DNWD843/knigopoisk/issues"
   },
   "homepage": ".",
   "devDependencies": {
@@ -36,8 +35,7 @@
     "eslint": "^8.33.0",
     "live-server": "^1.2.2",
     "rollup": "^3.14.0",
-    "rollup-plugin-import-css": "^3.1.0",
-    "gh-pages": "^5.0.0"
+    "rollup-plugin-import-css": "^3.1.0"
   },
   "dependencies": {
     "on-change": "^4.0.2"

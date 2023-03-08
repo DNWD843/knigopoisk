@@ -14,7 +14,9 @@ An application for searching and exploring books.
 
 #### available scripts  
 `npm run build` - creates a project build,   
-`npm run start` - starts live-server,
+`npm run start` - creates a project build and starts application,  
 `npm run watch` - starts changes watcher  
-To start project in dev-mode run `npm run watch` and `npm run start`  
 
+To start application run `npm run start`  
+
+To start application in dev-mode run `npm run start` and `npm run watch`  
