@@ -1,4 +1,3 @@
-export function extractIdFromDoc(card) {
-  const doc = JSON.parse(card);
-  return doc.key.replace('/works/', '');
+export function extractIdFromDoc(cardAsString) {
+  return JSON.parse(cardAsString).key.replace('/works/', '');
 }

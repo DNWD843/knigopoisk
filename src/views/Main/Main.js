@@ -37,14 +37,22 @@ export class MainView extends AbstractView {
   }
 
   #fetchBooks = async (query, offset) => {
-    // await api.getBooks(query, offset);
-    this.#state[mainViewStateKeys.LOADING] = true;
-    const data = await api.getBooks(query, offset);
-    const {[apiDataKeys.docs]: docs = [], [apiDataKeys.numFound]: numFound = 0} = data;
+      this.#state[mainViewStateKeys.LOADING] = true;
+      const data = await api.getBooks(query, offset);
 
-    this.#state[mainViewStateKeys.CARDS_SET] = new Set(docs.map(doc => JSON.stringify(doc)));
-    this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
-    this.#state[mainViewStateKeys.LOADING] = false;
+      if (!data) {
+        this.#state[mainViewStateKeys.LOADING] = false;
+        return;
+      }
+
+      const {[apiDataKeys.docs]: docs = [], [apiDataKeys.numFound]: numFound = 0} = data;
+
+      this.#state[mainViewStateKeys.CARDS_SET].clear();
+      docs.forEach(doc => {
+        this.#state[mainViewStateKeys.CARDS_SET].add(JSON.stringify(doc));
+      })
+      this.#state[mainViewStateKeys.NUM_FOUND] = numFound;
+      this.#state[mainViewStateKeys.LOADING] = false;
   }
 
   #handleAppStateChange = (path) => {

@@ -1,6 +1,6 @@
-import './BookDetails.css';
 import { TagsList } from "../TagsList/TagsList.js";
-import { api } from "../../api/Api.js";
+import { getImageSrc } from "../../utils/getImageSrc.js";
+import './BookDetails.css';
 
 export class BookDetailsComponent {
   #card;#title;#tags;#category;#author;#firstPublishYear;#pagesQuantity;#isAddedToFavorites;#handleClickFavoritesButton;#config;
@@ -22,7 +22,7 @@ export class BookDetailsComponent {
 
   }
 
-  #getImageSrc = () => api.getImageSrc(this.#card[this.#config.cover])
+  #getImageSrc = () => getImageSrc(this.#card[this.#config.cover])
 
   #getTemplate() {
     return document.querySelector(this.#config.templateSelector)
