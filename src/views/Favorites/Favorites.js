@@ -72,6 +72,5 @@ export class Favorites extends AbstractView {
   destroy = () => {
     super.destroy();
     onChange.unsubscribe(this.#appState);
-
   }
 }
