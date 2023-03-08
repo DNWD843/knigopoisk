@@ -25,4 +25,4 @@ export const loaderHtml = `
   </div>
 `;
 
-export const MAX_CARDS_ON_PAGE = 100;
+export const CARDS_ON_PAGE_QUANTITY = 100;

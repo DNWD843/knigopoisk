@@ -3,7 +3,7 @@ import { APP_TITLE } from "../../constants/titles.js";
 import onChange from "on-change";
 import { HeaderComponent } from "../../components/Header/Header.js";
 import { SearchComponent } from "../../components/Search/Search.js";
-import { MAX_CARDS_ON_PAGE, routes } from "../../constants/index.js";
+import { CARDS_ON_PAGE_QUANTITY, routes } from "../../constants/index.js";
 import { appStateKeys, mainViewStateKeys } from "../../constants/stateKeys.js";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
@@ -12,7 +12,7 @@ import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
 import { api } from "../../api/Api.js";
 import { apiDataKeys } from "../../constants/apiResponseKeys.js";
 import { Pagination } from "../../components/Pagination/Pagination.js";
-import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
+import { extractIdFromDoc } from "../../utils/extractIdFromCardKey.js";
 import "./Main.css";
 
 export class MainView extends AbstractView {
@@ -69,11 +69,11 @@ export class MainView extends AbstractView {
   }
 
   #onClickPrevButton = () => {
-    this.#state[mainViewStateKeys.OFFSET] -= MAX_CARDS_ON_PAGE;
+    this.#state[mainViewStateKeys.OFFSET] -= CARDS_ON_PAGE_QUANTITY;
   }
 
   #onClickNextButton = () => {
-    this.#state[mainViewStateKeys.OFFSET] += MAX_CARDS_ON_PAGE;
+    this.#state[mainViewStateKeys.OFFSET] += CARDS_ON_PAGE_QUANTITY;
   }
 
   #onClickFavoritesButton = card => (evt) => {
@@ -88,8 +88,7 @@ export class MainView extends AbstractView {
 
   #onClickCard = card => () => {
     this.#appState[appStateKeys.SELECTED_CARD] = card;
-    const doc = JSON.parse(card);
-    const docId = extractIdFromDocKey(doc);
+    const docId = extractIdFromDoc(card);
     this.redirectTo(`${routes.details}/${docId}`);
   }
 

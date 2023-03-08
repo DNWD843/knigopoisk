@@ -1,7 +1,7 @@
 import { paginationConfig } from "../../constants/paginationConfig.js";
 import './Pagination.css';
 import { mainViewStateKeys } from "../../constants/stateKeys.js";
-import { MAX_CARDS_ON_PAGE } from "../../constants/index.js";
+import { CARDS_ON_PAGE_QUANTITY } from "../../constants/index.js";
 
 export class Pagination {
   #node;#prevButton;#nextButton;#onClickPrevButton;#onClickNextButton;#isFirstPage;#isLastPage;#isSinglePage;#state;#position;
@@ -10,8 +10,8 @@ export class Pagination {
     this.#onClickNextButton = onClickNextButton;
     this.#state = state;
     this.#isFirstPage = (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.NUM_FOUND] > this.#state[mainViewStateKeys.CARDS_SET].size);
-    this.#isLastPage = (this.#state[mainViewStateKeys.OFFSET] > 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < MAX_CARDS_ON_PAGE);
-    this.#isSinglePage = (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < MAX_CARDS_ON_PAGE);
+    this.#isLastPage = (this.#state[mainViewStateKeys.OFFSET] > 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < CARDS_ON_PAGE_QUANTITY);
+    this.#isSinglePage = (this.#state[mainViewStateKeys.OFFSET] === 0) && (this.#state[mainViewStateKeys.CARDS_SET].size < CARDS_ON_PAGE_QUANTITY);
   }
 
   #getTemplate() {
@@ -37,7 +37,7 @@ export class Pagination {
     const leftLimit = this.#state[mainViewStateKeys.OFFSET] + 1;
     const rightLimit = this.#isLastPage || this.#isSinglePage
       ? this.#state[mainViewStateKeys.OFFSET] + this.#state[mainViewStateKeys.CARDS_SET].size
-      : this.#state[mainViewStateKeys.OFFSET] + MAX_CARDS_ON_PAGE;
+      : this.#state[mainViewStateKeys.OFFSET] + CARDS_ON_PAGE_QUANTITY;
     this.#position.textContent = `${leftLimit} . . . ${rightLimit}`;
 
     if (this.#isFirstPage && !this.#isSinglePage) {

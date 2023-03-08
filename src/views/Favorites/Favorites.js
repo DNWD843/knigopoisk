@@ -5,7 +5,7 @@ import onChange from "on-change";
 import { PageTitle } from "../../components/PageTitle/PageTitle.js";
 import { createMainContentBlock } from "../../utils/createMainContentBlock.js";
 import { CardsBlock } from "../../components/CardsBlock/CardsBlock.js";
-import { extractIdFromDocKey } from "../../utils/extractIdFromCardKey.js";
+import { extractIdFromDoc } from "../../utils/extractIdFromCardKey.js";
 import { routes } from "../../constants/index.js";
 import './Favorites.css';
 
@@ -36,8 +36,7 @@ export class Favorites extends AbstractView {
 
   #onClickCard = card => () => {
     this.#appState[appStateKeys.SELECTED_CARD] = card;
-    const doc = JSON.parse(card);
-    const docId = extractIdFromDocKey(doc);
+    const docId = extractIdFromDoc(card);
     this.redirectTo(`${routes.details}/${docId}`);
   }
 
