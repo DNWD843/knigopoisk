@@ -1,6 +1,6 @@
 # KnigoPoisk  
 
-An application for searching and exploring books.  
+An application for books searching and exploring.  
 
 #### main features:  
 - javascript
